@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shawn.mvvmslideproject.ui.activitys.Greeting
 import com.shawn.mvvmslideproject.ui.home.HomeList
+import com.shawn.mvvmslideproject.ui.login.LoginScreen
 
 @Composable
 fun NavigationConfigurations(
@@ -27,7 +28,7 @@ fun NavigationConfigurations(
             Greeting(name = "Search")
         }
         composable(BottomNavItem.Profile.route) {
-            Greeting(name = "Profile")
+            LoginScreen()
         }
     }
 }

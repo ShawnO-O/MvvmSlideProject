@@ -1,4 +1,4 @@
-package com.example.ig_slide_project.util
+package com.shawn.mvvmslideproject.util
 
 import android.util.Log
 import okhttp3.FormBody

@@ -2,8 +2,7 @@ package com.shawn.mvvmslideproject.model.source.repository.home
 
 import com.shawn.mvvmslideproject.model.data.home.AttractionsResponse
 import com.shawn.mvvmslideproject.model.source.remote.home.HomeRomeDataSource
-import com.example.ig_slide_project.util.Resource
-import com.shawn.mvvmslideproject.model.source.repository.home.HomeDomain
+import com.shawn.mvvmslideproject.util.Resource
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

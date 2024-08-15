@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MvvmSlideProject</string>
+    <string name="login_account">Account</string>
+    <string name="login_password">Password</string>
+    <string name="login">SignIn</string>
+    <string name="register">SignUp</string>
 </resources>

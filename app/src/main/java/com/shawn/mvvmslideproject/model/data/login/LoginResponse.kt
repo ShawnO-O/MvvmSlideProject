@@ -1,4 +1,3 @@
 package com.shawn.mvvmslideproject.model.data.login
 
-class LoginResponse {
-}
+data class LoginResponse(val success:Boolean,val message:String,val token:String)

@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation (libs.androidx.navigation.compose)
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     implementation (libs.ui)
     implementation (libs.androidx.material)
     implementation(libs.androidx.ui)
@@ -92,4 +93,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    //import mockito
+    testImplementation ("io.mockk:mockk:1.13.12")
+    androidTestImplementation ("io.mockk:mockk-android:1.13.12")
+
 }

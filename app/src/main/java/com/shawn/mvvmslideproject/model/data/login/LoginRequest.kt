@@ -1,4 +1,3 @@
 package com.shawn.mvvmslideproject.model.data.login
 
-class LoginRequest {
-}
+data class LoginRequest(val account:String,val password:String)
