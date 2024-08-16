@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.okhttp)
+    //Coil-loading image
+    implementation("io.coil-kt:coil-compose:2.7.0")
     //hilt 這要對應kotlin版本 所以一定要版本一致性
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     kapt("com.google.dagger:hilt-android-compiler") { version { strictly("2.48") } }
@@ -85,7 +87,12 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler") { version { strictly("2.48") } }
     implementation("com.google.dagger:hilt-android") { version { strictly("2.48") } }
     kapt("com.google.dagger:hilt-android-compiler") { version { strictly("2.48") } }
+
+    // room
     implementation(libs.androidx.room.ktx)
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

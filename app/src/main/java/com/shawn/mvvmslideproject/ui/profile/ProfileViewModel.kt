@@ -1,4 +1,6 @@
 package com.shawn.mvvmslideproject.ui.profile
 
-class ProfileViewModel {
+import com.shawn.mvvmslideproject.ui.base.BaseViewModel
+
+class ProfileViewModel:BaseViewModel() {
 }
