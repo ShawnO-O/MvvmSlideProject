@@ -109,6 +109,29 @@ fun ProfileMemberScreen() {
                         )
                 }
             }
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp)
+            ) {
+                Text(text = "email", fontSize = 20.sp)
+                IconButton(
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .width(16.dp)
+                        .height(16.dp)
+                        .align(Alignment.CenterVertically),
+                    onClick = {
+                        Log.d("shawnTest", "click2")
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Edit, contentDescription = "",
+
+                        )
+                }
+            }
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 OutlinedButton(
                     modifier = Modifier.padding(15.dp),

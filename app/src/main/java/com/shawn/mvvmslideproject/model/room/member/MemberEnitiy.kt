@@ -8,7 +8,6 @@ data class MemberInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-
     val account: String,
 
     val password: String,

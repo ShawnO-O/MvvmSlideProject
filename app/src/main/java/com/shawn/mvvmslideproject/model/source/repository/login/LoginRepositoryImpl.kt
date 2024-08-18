@@ -18,7 +18,17 @@ class LoginRepositoryImpl @Inject constructor(
     LoginRepository {
     override suspend fun login(account: String, password: String): Flow<LoginStatus> {
         return flow {
-            emit(localDataSource.validLogin(account, password))
+            var status = localDataSource.validLogin(account, password)
+            when(status){
+                is LoginStatus.Success ->{
+                    //這邊要check帳號是否存在
+
+                }
+                else->{
+                    emit(localDataSource.validLogin(account, password))
+
+                }
+            }
         }
     }
 
@@ -31,7 +41,9 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun register(account: String, password: String) {
-
+    override suspend fun register(account: String, password: String): Flow<Any> {
+       return flow{
+            memberDao.insertMember(MemberInfo(account = account, password = password, latestLoginTime = (System.currentTimeMillis()/100).toString()))
+        }
     }
 }
