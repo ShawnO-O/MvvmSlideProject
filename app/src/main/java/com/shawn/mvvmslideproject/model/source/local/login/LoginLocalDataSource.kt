@@ -1,5 +1,6 @@
 package com.shawn.mvvmslideproject.model.source.local.login
 
+import com.shawn.mvvmslideproject.model.room.member.MemberDao
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
 import javax.inject.Inject
 

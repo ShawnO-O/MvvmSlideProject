@@ -30,7 +30,7 @@ fun NavigationConfigurations(
             ProfileMemberScreen()
         }
         composable(BottomNavItem.Profile.route) {
-            ProfileGuestScreen()
+            LoginScreen()
         }
     }
 }

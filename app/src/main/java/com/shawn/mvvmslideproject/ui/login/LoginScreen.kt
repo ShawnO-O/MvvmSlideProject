@@ -1,5 +1,6 @@
 package com.shawn.mvvmslideproject.ui.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.util.ShowToastLong
+import kotlinx.coroutines.coroutineScope
 
 
 @Composable
@@ -50,6 +52,7 @@ fun AccountAndPassword(
             loginViewModel.clearToastMessage()
         }
     }
+    loginViewModel.getAllMember()
 
     Column(modifier = Modifier.padding(paddingValues)) {
         OutlinedTextField(
