@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation (libs.androidx.navigation.compose)
+    implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     implementation (libs.ui)
     implementation (libs.androidx.material)
@@ -82,6 +83,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
     //hilt 這要對應kotlin版本 所以一定要版本一致性
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.appcompat)
     kapt("com.google.dagger:hilt-android-compiler") { version { strictly("2.48") } }
     implementation("com.google.dagger:hilt-android") { version { strictly("2.48") } }
     kapt("com.google.dagger:hilt-compiler") { version { strictly("2.48") } }

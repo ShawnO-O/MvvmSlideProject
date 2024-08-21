@@ -1,6 +1,8 @@
 package com.shawn.mvvmslideproject.model.source.local.profile
 
-class ProfileLocalDataSource {
+import javax.inject.Inject
+
+class ProfileLocalDataSource @Inject constructor(){
 
     fun isProfileNameNotEmpty(){
 

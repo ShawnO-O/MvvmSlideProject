@@ -15,11 +15,11 @@ interface MemberDao {
     fun getMemberByAccount(account: String): MemberInfo
 
     @Insert
-    fun insertMember(member: MemberInfo)
+    fun insertMember(member: MemberInfo):Long
 
     @Delete
     fun deleteMember(member: MemberInfo)
 
     @Update
-    fun uodateMember(member: MemberInfo)
+    fun updateMember(member: MemberInfo)
 }

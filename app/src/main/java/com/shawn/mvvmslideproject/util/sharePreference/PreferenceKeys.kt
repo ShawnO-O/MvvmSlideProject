@@ -2,12 +2,13 @@ package com.shawn.mvvmslideproject.util.sharePreference
 
 
 object PreferenceKeys {
-        //TODO not implemented
+    const val CLIENT_INFO = "clientInfo"
+
 }
 
 /**
  * SharedPreference 的 file name
  */
 object PreferenceNames {
-        //TODO not implemented
+       const val MEMBER_INFO = "memberInfo"
 }

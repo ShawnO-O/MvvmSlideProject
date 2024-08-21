@@ -6,6 +6,7 @@ import com.shawn.mvvmslideproject.model.room.member.MemberDao
 import com.shawn.mvvmslideproject.model.room.member.MemberDatabase
 import com.shawn.mvvmslideproject.model.room.profile.ProfileDao
 import com.shawn.mvvmslideproject.model.room.profile.ProfileDatabase
+import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,4 +46,10 @@ object DatabaseModule {
             name = ProfileDatabase::class.java.simpleName
         ).fallbackToDestructiveMigration().build()
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideMemberLocalDataSource():MemberLocalDataSource{
+//        return MemberLocalDataSource
+//    }
 }
