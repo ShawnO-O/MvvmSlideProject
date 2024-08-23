@@ -1,7 +1,11 @@
 package com.shawn.mvvmslideproject.model.retrofitManager
 
-import com.shawn.mvvmslideproject.model.data.urlManager.UrlManager
 import com.google.gson.GsonBuilder
+import com.shawn.mvvmslideproject.model.data.home.Facilities
+import com.shawn.mvvmslideproject.model.data.home.Images
+import com.shawn.mvvmslideproject.model.data.urlManager.UrlManager
+import com.shawn.mvvmslideproject.util.customDeserializer.FacilitiesDeserializer
+import com.shawn.mvvmslideproject.util.customDeserializer.ImagesDeserializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +31,12 @@ object RetrofitManager {
         }
 
         val baseUrl = UrlManager.BASE_URL
-        val gson = GsonBuilder().setLenient().create()
+        val gson =
+            GsonBuilder()
+                .registerTypeAdapter(Images::class.java, ImagesDeserializer())
+                .registerTypeAdapter(Facilities::class.java, FacilitiesDeserializer())
+                .setLenient()
+                .create()
         val httpClient = httpClientBuilder.build()
 
 

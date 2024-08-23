@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shawn.mvvmslideproject.ui.home.HomeList
-import com.shawn.mvvmslideproject.ui.profile.ProfileMemberScreen
 import com.shawn.mvvmslideproject.ui.profile.ProfileScreen
 
 @Composable

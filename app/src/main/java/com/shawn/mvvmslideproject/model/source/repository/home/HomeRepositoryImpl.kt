@@ -12,13 +12,23 @@ import javax.inject.Inject
 class HomeRepositoryImpl @Inject constructor(private var homeRomeDataSource: HomeRomeDataSource) :
     HomeRepository {
 
-    override fun getAttractions(page: Int, lang: String): Flow<Resource<AttractionsResponse>> {
+    override fun getAttractionsFirst(page: Int, lang: String): Flow<Resource<AttractionsResponse>> {
         return flow {
             emit(Resource.Loading)
             val result = homeRomeDataSource.getAttractions(page, lang)
             result.body()?.let {
                 emit(Resource.Success(it))
             } ?: emit(Resource.Error(result.message(), result.code()))
+        }
+    }
+
+    override fun getAttractionsMore(page: Int, lang: String): Flow<Resource<AttractionsResponse>> {
+        return flow {
+            emit(Resource.Loading)
+            val result = homeRomeDataSource.getAttractions(page, lang)
+            result.body()?.let {
+                emit(Resource.Success(it))
+            } ?: emit(Resource.Error("沒有更多資料了", result.code()))
         }
     }
 }
