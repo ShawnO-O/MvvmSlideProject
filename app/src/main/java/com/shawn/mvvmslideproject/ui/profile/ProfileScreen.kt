@@ -14,10 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -44,6 +44,7 @@ import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.ui.login.LoginActivity
 import com.shawn.mvvmslideproject.util.ShowToastLong
+import com.shawn.mvvmslideproject.util.UseCamera
 
 
 //搭配登入、註冊使用
@@ -158,6 +159,13 @@ fun ProfileMemberScreen(
     emailEditClick: () -> Unit = {},
     onGenderChange: (String) -> Unit = {}
 ) {
+
+    val showCamera = remember { mutableStateOf(false) }
+
+    if (showCamera.value) {
+        UseCamera()
+    }
+
     Box(modifier = Modifier.fillMaxSize(1f)) {
         if (hasMemberId)
             Text(
@@ -178,6 +186,9 @@ fun ProfileMemberScreen(
                 contentDescription = "",
                 placeholder = painterResource(id = R.drawable.img_head_shot),
                 modifier = Modifier
+                    .clickable {
+                        showCamera.value = true
+                    }
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally)
             )
