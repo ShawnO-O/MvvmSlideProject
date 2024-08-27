@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -43,8 +44,11 @@ import coil.request.ImageRequest
 import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.ui.login.LoginActivity
+import com.shawn.mvvmslideproject.util.OnlyGetPermission
 import com.shawn.mvvmslideproject.util.ShowToastLong
-import com.shawn.mvvmslideproject.util.UseCamera
+import com.shawn.mvvmslideproject.util.createImageFile
+import com.shawn.mvvmslideproject.util.useCamera2
+import java.util.Objects
 
 
 //搭配登入、註冊使用
@@ -55,11 +59,18 @@ import com.shawn.mvvmslideproject.util.UseCamera
 fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val hasMemberId by profileViewModel.hasMemberId.collectAsState(initial = false)
     val profileInfo by profileViewModel.profileInfo.collectAsState()
-
+    var photo by remember { mutableStateOf("https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444") }
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showEditNameDialog by remember { mutableStateOf(false) }
     var showEditEmailDialog by remember { mutableStateOf(false) }
+    var showRationale by remember { mutableStateOf(false) }
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(
+        Objects.requireNonNull(context),
+        "${context.applicationContext.packageName}.provider",
+        file
+    )
     val loginLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
 //            if (result.resultCode == Activity.RESULT_OK) {
@@ -68,6 +79,17 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
 
 //            }
         }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            Log.d("shawnTestProfile","capturedImageUri $success")
+            Log.d("shawnTestProfile","uri $uri")
+            photo = uri.toString()
+//            if (success) capturedImageUri = uri else null
+
+        }
+    )
 
     LaunchedEffect(key1 = profileViewModel.toastSharedFlow) {
         profileViewModel.apply {
@@ -79,10 +101,21 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     }
     profileViewModel.hasMemberId()
     profileViewModel.getProfileData()
-
+    OnlyGetPermission(showRationale,
+        onShowDialog = {
+            showRationale = true
+        },
+        onGranted = {
+            useCamera2(context,uri,cameraLauncher) {
+                showRationale = true
+            }
+        },
+        onDismiss = {
+            showRationale = false
+        })
     if (hasMemberId) {
-//        profileViewModel.getProfileData()
         ProfileMemberScreen(
+            photo,
             profileInfo,
             hasMemberId,
             logoutClick = {
@@ -99,8 +132,12 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             },
             onGenderChange = {
                 profileViewModel.saveGender(it)
+            },
+            onCameraClick = {
+                useCamera2(context,uri,cameraLauncher) {
+                    showRationale = true
+                }
             }
-
         )
     } else {
         ProfileGuestScreen(onLoginClick = {
@@ -151,21 +188,16 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
 //@Preview(showBackground = true)
 @Composable
 fun ProfileMemberScreen(
+    photo:String,
     profileInfo: ProfileInfo,
     hasMemberId: Boolean,
     logoutClick: () -> Unit = {},
     nameEditClick: () -> Unit = {},
     birthEditClick: () -> Unit = {},
     emailEditClick: () -> Unit = {},
-    onGenderChange: (String) -> Unit = {}
+    onGenderChange: (String) -> Unit = {},
+    onCameraClick:() -> Unit = {}
 ) {
-
-    val showCamera = remember { mutableStateOf(false) }
-
-    if (showCamera.value) {
-        UseCamera()
-    }
-
     Box(modifier = Modifier.fillMaxSize(1f)) {
         if (hasMemberId)
             Text(
@@ -181,13 +213,13 @@ fun ProfileMemberScreen(
 //              model = "https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444",
                 model = ImageRequest.Builder(LocalContext.current)
                     .crossfade(true)
-                    .data("https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444")
+                    .data(photo)
                     .memoryCachePolicy(CachePolicy.ENABLED).build(),
                 contentDescription = "",
                 placeholder = painterResource(id = R.drawable.img_head_shot),
                 modifier = Modifier
                     .clickable {
-                        showCamera.value = true
+                        onCameraClick()
                     }
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally)
@@ -261,7 +293,6 @@ fun ProfileMemberScreen(
         }
     }
 }
-
 
 @Composable
 fun ProfileGenderGroup(value: String, onGenderChange: (String) -> Unit = {}) {

@@ -1,7 +1,5 @@
 package com.shawn.mvvmslideproject.model.source.repository.profile
 
-import android.util.Log
-import com.shawn.mvvmslideproject.model.data.profile.ProfileResponse
 import com.shawn.mvvmslideproject.model.room.profile.ProfileDao
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource

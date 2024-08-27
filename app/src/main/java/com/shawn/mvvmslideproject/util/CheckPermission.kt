@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,64 +30,41 @@ import java.util.Date
 import java.util.Locale
 import java.util.Objects
 
-@Composable
-fun UseCamera() {
-    val context = LocalContext.current
-    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        "${context.applicationContext.packageName}.provider",
-        file
-    )
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            if (success) capturedImageUri = uri else null
-        }
-    )
+
+// 調整後的 UseCamera 函數
+fun useCamera2(
+    context: Context,
+    uri: Uri,
+    cameraLauncher: ManagedActivityResultLauncher<Uri, Boolean>,
+    onGetPermission: () -> Unit
+) {
     val permissionCheckResult =
         ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA)
     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
         cameraLauncher.launch(uri)
     } else {
-        OnlyGetPermission() { cameraLauncher.launch(uri) }
-    }
-
-    // 顯示拍攝的圖片
-    capturedImageUri?.let { uri ->
-        Image(
-            painter = rememberAsyncImagePainter(uri),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-        )
+        onGetPermission()
     }
 }
 
 @Composable
-fun OnlyGetPermission(onGranted: () -> Unit = {}) {
-    val context = LocalContext.current
-    var showRationale by remember { mutableStateOf(false) }
-
+fun OnlyGetPermission(showRationale: Boolean, onGranted: () -> Unit = {},onShowDialog:()->Unit={},onDismiss: () -> Unit) {
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 onGranted()
             } else {
-                showRationale = true
+                onShowDialog()
             }
         }
 
     if (showRationale) {
         NeededPermissionAlertDialog(
-            onDismiss = { showRationale = false },
+            onDismiss = onDismiss,
             launcher = launcher,
-            permission = android.Manifest.permission.CAMERA
+            permission = android.Manifest.permission.CAMERA,
         )
     }
-//    currentUri?.let {
-        launcher.launch(android.Manifest.permission.CAMERA)
-//    }
 }
 
 @Composable
@@ -103,7 +82,7 @@ fun NeededPermissionAlertDialog(
         confirmButton = {
             Button(onClick = {
                 launcher.launch(permission)
-//                launcher.launch(android.Manifest.permission.CAMERA)
+                onDismiss()
             }) {
                 Text("授予權限")
             }
@@ -211,100 +190,3 @@ fun Context.createImageFile(): File {
         storageDir
     )
 }
-//
-//@Composable
-//fun CheckPermission() {
-//    val context = LocalContext.current
-//    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
-//    var showRationale by remember { mutableStateOf(false) }
-//
-//    val launcher =
-//        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
-//            onResult = { isGranted: Boolean ->
-//                if (isGranted) {
-//                    //有權限
-//                    takePicture()
-//                } else {
-//                    //權限拒絕
-//                }
-//
-//            })
-//}
-//
-//
-//fun takePicture(currentUri: Uri?, onCapture: (Uri?) -> Unit) {
-//    val context = LocalContext.current
-//    val file = context.createImageFile()
-//    val uri = FileProvider.getUriForFile(
-//        Objects.requireNonNull(context), "${context.applicationContext.packageName}.provider",
-//        file
-//    )
-//    val cameraLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.TakePicture(),
-//        onResult = { success ->
-//            onCapture(if (success) uri else null)
-//        }
-//    )
-//    cameraLauncher.launch(uri)
-//}
-//
-//fun Context.createImageFile(): File {
-//    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-//    val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-//    return File.createTempFile(
-//        "JPEG_${timeStamp}",
-//        ".jpg",
-//        storageDir
-//    )
-//}
-
-//@Composable
-//fun checkPermission() {
-//    val context = LocalContext.current
-//    val file = context.createImageFile()
-//    val uri = FileProvider.getUriForFile(Objects.requireNonNull(context),"${applicationId}"+".provider",file)
-//    var capturedImageUri by remember {
-//        mutableStateOf<Uri>(Uri.EMPTY)
-//    }
-//    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-//        capturedImageUri = uri
-//    }
-//    val permissionLauncher =
-//        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-//            if(it){
-//                cameraLauncher.launch(uri)
-//            }else{
-//
-//            }
-//        }
-//
-//
-//    val permissionCheckResult = ContextCompat.checkSelfPermission(context,android.Manifest.permission.CAMERA)
-//    if(permissionCheckResult == PackageManager.PERMISSION_GRANTED){
-//        cameraLauncher.launch(uri)
-//    }else{
-//        permissionLauncher.launch(android.Manifest.permission.CAMERA)
-//    }
-//}
-
-
-fun CameraLauncher() {
-
-}
-
-@Composable
-fun CameraScreen() {
-
-}
-
-@Composable
-fun AlbumScreen() {
-
-}
-
-//val localtionPression =
-//    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//
-//fun checkPermissionGranted(context: Context) = REQUIRED_PERMISSIONS.all {
-//
-//}

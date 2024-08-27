@@ -2,6 +2,7 @@ package com.shawn.mvvmslideproject.util
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -28,6 +29,8 @@ class PermissionUtils {
             return ContextCompat.checkSelfPermission(MvvmSlideProjectApplication.applicationContext(),Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         }
 
+
+
 //        fun requestCameraPermission(activity: Activity) {
 //            requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), PhotoUploadParameter.REQUEST_PERMISSION_CAMERA)
 //        }
@@ -45,6 +48,10 @@ class PermissionUtils {
 //                keepCheckPassing.launch(intent)
 //            }
 //        }
+
+        private fun Context.requestPermission( permissions: Array<String>, requestCode: Int){
+//            ActivityCompat.requestPermissions(this,permissions,requestCode)
+        }
 
         private fun requestPermissions(activity: Activity, permissions: Array<String>, requestCode: Int) {
             ActivityCompat.requestPermissions(activity, permissions, requestCode)
