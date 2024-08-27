@@ -45,11 +45,11 @@ class LoginLocalDataSource @Inject constructor() {
          * password must over 6 char and contain alphabet and number
          * **/
         validLoginId(account).apply {
-            if (!first) return LoginStatus.InvalidAccountId(second, 0)
+            if (!first) return LoginStatus.InvalidAccountIdFormat(second, 0)
         }
 
         validPassword(password).apply {
-            if (!first) return LoginStatus.InvalidPassword(second, 0)
+            if (!first) return LoginStatus.InvalidPasswordFormat(second, 0)
         }
         return LoginStatus.AccountAndPasswordCorrect
     }

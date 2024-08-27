@@ -23,9 +23,7 @@ class LoginRepositoryImpl @Inject constructor(
 ) :
     LoginRepository {
     override suspend fun saveMemberId(mId: Int) {
-//            flow{
                 memberLocalDataSource.saveId(mId)
-//            }
     }
 
     override suspend fun login(account: String, password: String): Flow<LoginStatus> {
@@ -35,12 +33,24 @@ class LoginRepositoryImpl @Inject constructor(
                 is LoginStatus.AccountAndPasswordCorrect -> {
                     //這邊要check帳號是否存在
                     var member:MemberInfo?=null
+                    Log.d("shawnTestLogin","member:$member")
                     withContext(Dispatchers.IO) {
                         member = memberDao.getMemberByAccount(account)
                     }
+                    Log.d("shawnTestLogin","member:$member")
                     if (member != null) {
-                        member?.let {
-                            emit(LoginStatus.Success(it.id))
+                        //帳號存在那就要檢查密碼是否正確
+                        var checkLoginResult:MemberInfo?=null
+                        withContext(Dispatchers.IO){
+                            checkLoginResult =  memberDao.checkLoginAccountAndPassword(account,password)
+                        }
+                        Log.d("shawnTestLogin","checkLoginResult:$checkLoginResult")
+                        if(checkLoginResult!=null){
+                            member?.let {
+                                emit(LoginStatus.Success(it.id))
+                            }
+                        }else{
+                            emit(LoginStatus.InvalidPassword("帳號或密碼錯誤！"))
                         }
                     } else {
                         emit(LoginStatus.AccountNotExists("帳號不存在，請先註冊"))
@@ -56,23 +66,6 @@ class LoginRepositoryImpl @Inject constructor(
     override suspend fun logout(): Flow<LogoutStatus> {
         return flow{
             memberLocalDataSource.clearMemberInfo()
-        }
-    }
-
-    override suspend fun getMembers(): Flow<List<MemberInfo>> {
-        return flow {
-//            withContext(Dispatchers.IO) {
-//            memberDao.insertMember(
-//                MemberInfo(
-//                    account = "123456",
-//                    password = "456789",
-//                    latestLoginTime = "2023/05/05"
-//                )
-//            )
-//            }
-            var list = memberDao.getAllMember()
-            Log.d("shawnTest", "List:$list")
-            emit(list)
         }
     }
 

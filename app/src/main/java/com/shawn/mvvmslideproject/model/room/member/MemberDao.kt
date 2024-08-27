@@ -14,6 +14,9 @@ interface MemberDao {
     @Query("SELECT * FROM members WHERE account = :account")
     fun getMemberByAccount(account: String): MemberInfo
 
+    @Query("SELECT * FROM members WHERE account=:account AND password=:password")
+    fun checkLoginAccountAndPassword(account: String, password: String): MemberInfo?
+
     @Insert
     fun insertMember(member: MemberInfo):Long
 

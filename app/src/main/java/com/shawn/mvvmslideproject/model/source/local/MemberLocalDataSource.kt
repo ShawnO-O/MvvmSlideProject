@@ -32,6 +32,7 @@ class MemberLocalDataSource@Inject constructor() {
 
     fun clearMemberInfo() {
         profileSharePreference = ""
+        setMemberInfo(MemberLocalData())
         memberInfo = null
     }
 
@@ -50,7 +51,7 @@ class MemberLocalDataSource@Inject constructor() {
     fun getMemberId() = getMemberInfo().memberId
 
     fun hasMemberId(): Boolean {
-        Log.d("shawnTest","50")
+        Log.d("shawnTest","50：${getMemberInfo()}")
         return getMemberInfo()?.memberId != 0
 //        if (memberInfo == null) {
 //            memberInfo = getMemberInfo()

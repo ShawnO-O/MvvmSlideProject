@@ -123,7 +123,7 @@ fun AccountAndPassword(
                 modifier = Modifier
                     .weight(1f)
                     .padding(20.dp),
-                onClick = onLoginClick
+                onClick = onRegisterClick
             ) {
                 Text(text = stringResource(id = R.string.register))
             }
@@ -131,7 +131,7 @@ fun AccountAndPassword(
                 modifier = Modifier
                     .weight(1f)
                     .padding(20.dp),
-                onClick = onRegisterClick
+                onClick = onLoginClick
             ) {
                 Text(text = stringResource(id = R.string.login))
             }

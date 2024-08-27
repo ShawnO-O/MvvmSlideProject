@@ -74,7 +74,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val loginLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
 //            if (result.resultCode == Activity.RESULT_OK) {
-            Log.d("shawnTest", "result is ok")
+            Log.d("shawnTest", "66 result is ok")
             profileViewModel.hasMemberId()
 
 //            }
@@ -99,8 +99,8 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             }
         }
     }
+
     profileViewModel.hasMemberId()
-    profileViewModel.getProfileData()
     OnlyGetPermission(showRationale,
         onShowDialog = {
             showRationale = true
@@ -114,6 +114,12 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             showRationale = false
         })
     if (hasMemberId) {
+
+
+    if (hasMemberId) {
+        profileViewModel.getProfileData()
+        Log.d("shawnTest", "hasMemberId is true")
+//        profileViewModel.getProfileData()
         ProfileMemberScreen(
             photo,
             profileInfo,
@@ -140,6 +146,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             }
         )
     } else {
+        Log.d("shawnTest", "hasMemberId is false")
         ProfileGuestScreen(onLoginClick = {
             val intent = Intent(context, LoginActivity::class.java)
             loginLauncher.launch(intent)
