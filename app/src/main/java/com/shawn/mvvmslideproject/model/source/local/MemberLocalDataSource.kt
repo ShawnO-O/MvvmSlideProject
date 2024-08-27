@@ -1,7 +1,7 @@
 package com.shawn.mvvmslideproject.model.source.local
 
-import android.util.Log
 import com.google.gson.Gson
+import com.shawn.mvvmslideproject.model.source.local.MemberInfo.memberInfo
 import com.shawn.mvvmslideproject.util.sharePreference.Preference
 import com.shawn.mvvmslideproject.util.sharePreference.PreferenceKeys.CLIENT_INFO
 import com.shawn.mvvmslideproject.util.sharePreference.PreferenceNames.MEMBER_INFO
@@ -15,11 +15,14 @@ data class MemberLocalData(
     val memberBirth: String = ""
 )
 
+object MemberInfo{
+    var memberInfo: MemberLocalData? = null
+}
 
 class MemberLocalDataSource@Inject constructor() {
     private val gson: Gson = Gson()
     private var profileSharePreference by Preference(CLIENT_INFO, MEMBER_INFO, "")
-    private var memberInfo: MemberLocalData? = null
+
     fun getMemberInfo(): MemberLocalData {
         memberInfo = gson.fromJson(profileSharePreference, MemberLocalData::class.java)
         return memberInfo?: MemberLocalData()
@@ -31,27 +34,25 @@ class MemberLocalDataSource@Inject constructor() {
     }
 
     fun clearMemberInfo() {
-        profileSharePreference = ""
-        setMemberInfo(MemberLocalData())
-        memberInfo = null
+            profileSharePreference = ""
+            setMemberInfo(MemberLocalData())
+            saveId(0)
+            memberInfo = null
     }
 
     //onlyId
     fun saveId(id: Int) {
-        Log.d("shawnTest","saveId:$id")
         var memberInfo = getMemberInfo() as MemberLocalData
 
         memberInfo.apply {
             memberInfo = MemberLocalData(memberId = id)
             setMemberInfo(memberInfo)
         }
-        Log.d("shawnTest","getMemberInfo:$memberInfo")
     }
 
     fun getMemberId() = getMemberInfo().memberId
 
     fun hasMemberId(): Boolean {
-        Log.d("shawnTest","50：${getMemberInfo()}")
         return getMemberInfo()?.memberId != 0
 //        if (memberInfo == null) {
 //            memberInfo = getMemberInfo()

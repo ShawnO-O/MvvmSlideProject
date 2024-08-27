@@ -20,10 +20,10 @@ class LoginRepositoryImpl @Inject constructor(
     private var localDataSource: LoginLocalDataSource,
     private val memberLocalDataSource: MemberLocalDataSource,
     private val memberDao: MemberDao
-) :
-    LoginRepository {
+) : LoginRepository {
+
     override suspend fun saveMemberId(mId: Int) {
-                memberLocalDataSource.saveId(mId)
+        memberLocalDataSource.saveId(mId)
     }
 
     override suspend fun login(account: String, password: String): Flow<LoginStatus> {
@@ -32,30 +32,29 @@ class LoginRepositoryImpl @Inject constructor(
             when (status) {
                 is LoginStatus.AccountAndPasswordCorrect -> {
                     //這邊要check帳號是否存在
-                    var member:MemberInfo?=null
-                    Log.d("shawnTestLogin","member:$member")
+                    var member: MemberInfo? = null
                     withContext(Dispatchers.IO) {
                         member = memberDao.getMemberByAccount(account)
                     }
-                    Log.d("shawnTestLogin","member:$member")
                     if (member != null) {
                         //帳號存在那就要檢查密碼是否正確
-                        var checkLoginResult:MemberInfo?=null
-                        withContext(Dispatchers.IO){
-                            checkLoginResult =  memberDao.checkLoginAccountAndPassword(account,password)
+                        var checkLoginResult: MemberInfo? = null
+                        withContext(Dispatchers.IO) {
+                            checkLoginResult =
+                                memberDao.checkLoginAccountAndPassword(account, password)
                         }
-                        Log.d("shawnTestLogin","checkLoginResult:$checkLoginResult")
-                        if(checkLoginResult!=null){
+                        if (checkLoginResult != null) {
                             member?.let {
                                 emit(LoginStatus.Success(it.id))
                             }
-                        }else{
+                        } else {
                             emit(LoginStatus.InvalidPassword("帳號或密碼錯誤！"))
                         }
                     } else {
                         emit(LoginStatus.AccountNotExists("帳號不存在，請先註冊"))
                     }
                 }
+
                 else -> {
                     emit(localDataSource.validLogin(account, password))
                 }
@@ -63,10 +62,8 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(): Flow<LogoutStatus> {
-        return flow{
-            memberLocalDataSource.clearMemberInfo()
-        }
+    override fun logout() {
+        memberLocalDataSource.clearMemberInfo()
     }
 
     override suspend fun register(account: String, password: String): Flow<RegisterStatus> {
@@ -82,9 +79,9 @@ class LoginRepositoryImpl @Inject constructor(
                 )
             }
 
-            if(result == -1L){
+            if (result == -1L) {
                 emit(RegisterStatus.Fail)
-            }else{
+            } else {
                 emit(RegisterStatus.Success)
             }
         }

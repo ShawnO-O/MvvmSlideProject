@@ -114,12 +114,8 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             showRationale = false
         })
     if (hasMemberId) {
-
-
-    if (hasMemberId) {
         profileViewModel.getProfileData()
-        Log.d("shawnTest", "hasMemberId is true")
-//        profileViewModel.getProfileData()
+        Log.d("shawnTest", "hasMemberId is true:$profileInfo")
         ProfileMemberScreen(
             photo,
             profileInfo,
@@ -146,7 +142,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             }
         )
     } else {
-        Log.d("shawnTest", "hasMemberId is false")
+        Log.d("shawnTest", "hasMemberId is false:$profileInfo")
         ProfileGuestScreen(onLoginClick = {
             val intent = Intent(context, LoginActivity::class.java)
             loginLauncher.launch(intent)

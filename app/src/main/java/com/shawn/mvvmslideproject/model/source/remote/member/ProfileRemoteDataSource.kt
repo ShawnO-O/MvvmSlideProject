@@ -10,14 +10,14 @@ import java.net.URLEncoder
 import javax.inject.Inject
 
 class ProfileRemoteDataSource @Inject constructor(private val imgurApiService: ImgurApiService){
-    suspend fun upLoadImage() :Response<ImgurResponse>{
-        val requestFile: RequestBody = RequestBody.create(
-            mimeStr.toMediaTypeOrNull(),
-            uploadAttachmentData.attachment
-        )
-        val encodeFileName = URLEncoder.encode("fileName","UTF-8")
-        val mutipaartBodyFile: MultipartBody.Part =
-            MultipartBody.Part.createFormData("image",)
-        return imgurApiService.postImage("89538457abd19af",encodeFileName,requestFile)
-    }
+//    suspend fun upLoadImage() :Response<ImgurResponse>{
+//        val requestFile: RequestBody = RequestBody.create(
+////            mimeStr.toMediaTypeOrNull(),
+////            uploadAttachmentData.attachment
+//        )
+//        val encodeFileName = URLEncoder.encode("fileName","UTF-8")
+////        val mutipaartBodyFile: MultipartBody.Part =
+////            MultipartBody.Part.createFormData("image",)
+//        return imgurApiService.postImage("89538457abd19af",encodeFileName,requestFile)
+//    }
 }

@@ -31,7 +31,9 @@ class ProfileViewModel @Inject constructor(
     fun getProfileData() {
         viewModelScope.launch {
             profileRepositoryImpl.getProfileInfo().collect {
+                Log.d("shawnTest","viewModel:34")
                 _profileInfo.value = it
+                Log.d("shawnTest","_profileInfo:${_profileInfo.value}")
             }
         }
     }
@@ -84,9 +86,11 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() {
         //fack just clear member info
+
         viewModelScope.launch {
-            loginRepositoryImpl.logout()
+            Log.d("shawnTest","logout 91")
             _profileInfo.value = ProfileInfo()
+            loginRepositoryImpl.logout()
             _hasMemberId.value = false
         }
     }

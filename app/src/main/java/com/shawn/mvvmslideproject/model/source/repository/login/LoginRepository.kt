@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface LoginRepository {
     suspend fun saveMemberId(mId: Int)
     suspend fun login(account: String, password: String): Flow<LoginStatus>
-    suspend fun logout(): Flow<LogoutStatus>
+    fun logout()
     suspend fun register(account: String, password: String): Flow<Any>
 }
