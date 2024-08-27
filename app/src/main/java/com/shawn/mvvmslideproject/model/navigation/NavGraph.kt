@@ -7,11 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shawn.mvvmslideproject.ui.activitys.Greeting
 import com.shawn.mvvmslideproject.ui.home.HomeList
-import com.shawn.mvvmslideproject.ui.login.LoginScreen
-import com.shawn.mvvmslideproject.ui.profile.ProfileGuestScreen
-import com.shawn.mvvmslideproject.ui.profile.ProfileMemberScreen
+import com.shawn.mvvmslideproject.ui.profile.ProfileScreen
 
 @Composable
 fun NavigationConfigurations(
@@ -27,10 +24,10 @@ fun NavigationConfigurations(
             HomeList()
         }
         composable(BottomNavItem.Search.route) {
-            ProfileMemberScreen()
+            HomeList()
         }
         composable(BottomNavItem.Profile.route) {
-            LoginScreen()
+            ProfileScreen()
         }
     }
 }

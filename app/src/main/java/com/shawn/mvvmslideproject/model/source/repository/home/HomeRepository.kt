@@ -5,5 +5,8 @@ import com.shawn.mvvmslideproject.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
-    fun getAttractions(page: Int, lang: String): Flow<Resource<AttractionsResponse>>
+    fun getAttractionsFirst(page: Int, lang: String): Flow<Resource<AttractionsResponse>>
+
+    fun getAttractionsMore(page:Int,lang:String):Flow<Resource<AttractionsResponse>>
+
 }

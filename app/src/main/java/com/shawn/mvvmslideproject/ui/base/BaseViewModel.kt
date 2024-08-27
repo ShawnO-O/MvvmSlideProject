@@ -12,6 +12,8 @@ import javax.inject.Inject
 open class BaseViewModel@Inject constructor():ViewModel() {
     val _toastShardFlow = MutableSharedFlow<String>()
     val toastSharedFlow : SharedFlow<String> = _toastShardFlow
+    val _finishSharedFlow = MutableSharedFlow<Boolean>()
+    val finishSharedFlow : SharedFlow<Boolean> = _finishSharedFlow
     val _snackBarShardFlow = MutableSharedFlow<String>()
     val snackBarSharedFlow : SharedFlow<String> = _snackBarShardFlow
 

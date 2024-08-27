@@ -1,6 +1,5 @@
 package com.shawn.mvvmslideproject.model.source.local.login
 
-import com.shawn.mvvmslideproject.model.room.member.MemberDao
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
 import javax.inject.Inject
 
@@ -19,10 +18,6 @@ class LoginLocalDataSource @Inject constructor() {
         return if (account.isNotEmpty())
             account[0].lowercaseChar() in 'a'..'z'
         else false
-    }
-
-    fun isLoginIdExist(account: String) {
-
     }
 
     fun validPassword(password: String): Pair<Boolean, String> {
@@ -52,12 +47,10 @@ class LoginLocalDataSource @Inject constructor() {
         validLoginId(account).apply {
             if (!first) return LoginStatus.InvalidAccountId(second, 0)
         }
-        isLoginIdExist(account).apply {
 
-        }
         validPassword(password).apply {
             if (!first) return LoginStatus.InvalidPassword(second, 0)
         }
-        return LoginStatus.Success
+        return LoginStatus.AccountAndPasswordCorrect
     }
 }

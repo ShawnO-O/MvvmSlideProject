@@ -1,5 +1,6 @@
 package com.shawn.mvvmslideproject.model.room.profile
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,15 +10,17 @@ data class ProfileInfo(
     val id:Int = 0,
 
     //this id from member's table id
-    val mId:Int = 0,
+    //在insert的時候必帶，所以不能編輯
+    @ColumnInfo("memberId")
+    val memberId:Int = 0,
 
-    val name:String,
+    var name:String?="",
 
-    val birthDay:String,
+    var birthDay:String?="",
 
-    val gender:String,
+    var gender:String?="",
 
-    val phone:String,
+    var phone:String?="",
 
-    val email:String
+    var email:String?=""
 )

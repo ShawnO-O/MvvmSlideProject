@@ -8,9 +8,9 @@ data class MemberInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    val account: String,
+    val account: String = "",
 
-    val password: String,
+    val password: String = "",
 
-    val latestLoginTime: String
+    val latestLoginTime: String = ""
 )
