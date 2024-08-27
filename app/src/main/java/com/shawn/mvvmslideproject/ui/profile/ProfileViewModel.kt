@@ -86,6 +86,7 @@ class ProfileViewModel @Inject constructor(
         //fack just clear member info
         viewModelScope.launch {
             loginRepositoryImpl.logout()
+            _profileInfo.value = ProfileInfo()
             _hasMemberId.value = false
         }
     }

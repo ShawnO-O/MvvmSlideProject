@@ -1,17 +1,12 @@
 package com.shawn.mvvmslideproject.ui.login
 
 import androidx.lifecycle.viewModelScope
-import com.shawn.mvvmslideproject.model.room.member.MemberInfo
-import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource
-import com.shawn.mvvmslideproject.model.source.local.login.LoginLocalDataSource
 import com.shawn.mvvmslideproject.model.source.repository.login.LoginRepositoryImpl
 import com.shawn.mvvmslideproject.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,22 +14,11 @@ class LoginViewModel @Inject constructor(
     private val loginRepositoryImpl: LoginRepositoryImpl
 ) :
     BaseViewModel() {
-    private val _membersSharedFlow = MutableSharedFlow<List<MemberInfo>>()
-
     private val _account = MutableSharedFlow<String>()
     val account : SharedFlow<String> = _account
 
     private val _password = MutableSharedFlow<String>()
     val password : SharedFlow<String> = _password
-
-    val memberSharedFlow: SharedFlow<List<MemberInfo>> = _membersSharedFlow
-    fun getAllMember() {
-        viewModelScope.launch {
-            loginRepositoryImpl.getMembers().collect {
-                _membersSharedFlow.emit(it)
-            }
-        }
-    }
 
     fun login(account: String, password: String) {
         viewModelScope.launch {
@@ -47,7 +31,7 @@ class LoginViewModel @Inject constructor(
                         _finishSharedFlow.emit(true)
                     }
 
-                    is LoginStatus.InvalidAccountId -> {
+                    is LoginStatus.InvalidAccountIdFormat -> {
                         _toastShardFlow.emit(it.message)
                     }
 
@@ -55,10 +39,12 @@ class LoginViewModel @Inject constructor(
                         _toastShardFlow.emit(it.message)
                     }
 
-                    is LoginStatus.InvalidPassword -> {
+                    is LoginStatus.InvalidPasswordFormat -> {
                         _toastShardFlow.emit(it.message)
                     }
-
+                    is LoginStatus.InvalidPassword->{
+                        _toastShardFlow.emit(it.message)
+                    }
                     LoginStatus.AccountAndPasswordCorrect -> {
 
                     }
