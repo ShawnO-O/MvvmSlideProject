@@ -4,4 +4,10 @@
     <string name="login_password">Password</string>
     <string name="login">SignIn</string>
     <string name="register">SignUp</string>
+    <string name="login_first">Sign In Now</string>
+    <string name="list_data_empty">No more data!</string>
+    <string name="account_should_over_six_char">Account Should Over Six Char</string>\
+    <string name="account_should_start_with_alphabet">Account Should Start With Alphabet</string>
+    <string name="password_should_over_six_char">Password Should Over Six Char</string>
+    <string name="password_should_contain_alphabet_and_number">Password Should Contain Alphabet And Number</string>
 </resources>

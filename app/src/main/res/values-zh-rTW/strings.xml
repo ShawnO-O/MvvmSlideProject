@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MvvmSlideProject</string>
+    <string name="login_account">帳號</string>
+    <string name="login_password">密碼</string>
+    <string name="login">登入</string>
+    <string name="register">註冊</string>
+    <string name="login_first">請先登入</string>
+    <string name="list_data_empty">沒有更多資料了</string>
+    <string name="account_should_over_six_char">帳號必須大於六個字元</string>\
+    <string name="account_should_start_with_alphabet">帳號開頭必須為英文字母</string>
+    <string name="password_should_over_six_char">密碼必須大於六個字元</string>
+    <string name="password_should_contain_alphabet_and_number">密碼必須包含英文字母及數字</string>
+</resources>

@@ -1,6 +1,5 @@
 package com.shawn.mvvmslideproject.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.model.source.repository.login.LoginRepositoryImpl
@@ -31,9 +30,7 @@ class ProfileViewModel @Inject constructor(
     fun getProfileData() {
         viewModelScope.launch {
             profileRepositoryImpl.getProfileInfo().collect {
-                Log.d("shawnTest","viewModel:34")
                 _profileInfo.value = it
-                Log.d("shawnTest","_profileInfo:${_profileInfo.value}")
             }
         }
     }
@@ -41,12 +38,20 @@ class ProfileViewModel @Inject constructor(
     fun saveName(name: String) {
         viewModelScope.launch {
             profileRepositoryImpl.updateProfileName(name).collect {
-                when(it){
-                    is ProfileSealedStatus.Success ->{
+                when (it) {
+                    is ProfileSealedStatus.Success -> {
                         _toastShardFlow.emit("儲存成功")
                     }
-                    is ProfileSealedStatus.Failed ->{
+
+                    is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
+                    }
+
+                    is ProfileSealedStatus.ShouldNotBeEmpty -> {
+                        _toastShardFlow.emit(it.message)
+                    }
+                    is ProfileSealedStatus.FormatError->{
+                        _toastShardFlow.emit(it.message)
                     }
                 }
             }
@@ -56,12 +61,19 @@ class ProfileViewModel @Inject constructor(
     fun saveEmail(email: String) {
         viewModelScope.launch {
             profileRepositoryImpl.updateProfileEmail(email).collect {
-                when(it){
-                    is ProfileSealedStatus.Success ->{
+                when (it) {
+                    is ProfileSealedStatus.Success -> {
                         _toastShardFlow.emit("儲存成功")
                     }
-                    is ProfileSealedStatus.Failed ->{
+
+                    is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
+                    }
+                    is ProfileSealedStatus.ShouldNotBeEmpty -> {
+                        _toastShardFlow.emit(it.message)
+                    }
+                    is ProfileSealedStatus.FormatError->{
+                        _toastShardFlow.emit(it.message)
                     }
                 }
             }
@@ -69,15 +81,43 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun saveGender(gender: String) {
-        Log.d("shawnTest","gender is $gender")
         viewModelScope.launch {
             profileRepositoryImpl.updateProfileGender(gender).collect {
-                when(it){
-                    is ProfileSealedStatus.Success ->{
+                when (it) {
+                    is ProfileSealedStatus.Success -> {
                         _toastShardFlow.emit("儲存成功")
                     }
-                    is ProfileSealedStatus.Failed ->{
+
+                    is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
+                    }
+                    is ProfileSealedStatus.ShouldNotBeEmpty -> {
+                        _toastShardFlow.emit(it.message)
+                    }
+                    is ProfileSealedStatus.FormatError->{
+                        _toastShardFlow.emit(it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    fun saveBirth(birth: String){
+        viewModelScope.launch {
+            profileRepositoryImpl.updateProfileBirth(birth).collect{
+                when(it){
+                    is ProfileSealedStatus.Success -> {
+                        _toastShardFlow.emit("儲存成功")
+                    }
+
+                    is ProfileSealedStatus.Failed -> {
+                        //TODO not yet implemented
+                    }
+                    is ProfileSealedStatus.ShouldNotBeEmpty -> {
+                        _toastShardFlow.emit(it.message)
+                    }
+                    is ProfileSealedStatus.FormatError->{
+                        _toastShardFlow.emit(it.message)
                     }
                 }
             }
@@ -88,7 +128,6 @@ class ProfileViewModel @Inject constructor(
         //fack just clear member info
 
         viewModelScope.launch {
-            Log.d("shawnTest","logout 91")
             _profileInfo.value = ProfileInfo()
             loginRepositoryImpl.logout()
             _hasMemberId.value = false

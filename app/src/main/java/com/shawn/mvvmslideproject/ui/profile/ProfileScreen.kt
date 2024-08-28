@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,7 +75,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val loginLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
 //            if (result.resultCode == Activity.RESULT_OK) {
-            Log.d("shawnTest", "66 result is ok")
             profileViewModel.hasMemberId()
 
 //            }
@@ -83,11 +83,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
-            Log.d("shawnTestProfile","capturedImageUri $success")
-            Log.d("shawnTestProfile","uri $uri")
             photo = uri.toString()
-//            if (success) capturedImageUri = uri else null
-
         }
     )
 
@@ -115,7 +111,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
         })
     if (hasMemberId) {
         profileViewModel.getProfileData()
-        Log.d("shawnTest", "hasMemberId is true:$profileInfo")
         ProfileMemberScreen(
             photo,
             profileInfo,
@@ -142,7 +137,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             }
         )
     } else {
-        Log.d("shawnTest", "hasMemberId is false:$profileInfo")
         ProfileGuestScreen(onLoginClick = {
             val intent = Intent(context, LoginActivity::class.java)
             loginLauncher.launch(intent)
@@ -335,7 +329,7 @@ fun ProfileGuestScreen(onLoginClick: () -> Unit = {}) {
                 modifier = Modifier.padding(top = 20.dp),
                 onClick = onLoginClick
             ) {
-                Text(text = "請先登入")
+                Text(text = stringResource(id = R.string.login_first))
             }
         }
     }

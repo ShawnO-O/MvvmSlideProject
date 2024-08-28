@@ -16,5 +16,9 @@ class MvvmSlideProjectApplication:Application() {
         fun applicationContext(): Context {
             return instance!!.applicationContext
         }
+
+        fun getStringResource(id:Int):String{
+            return applicationContext().getString(id)
+        }
     }
 }

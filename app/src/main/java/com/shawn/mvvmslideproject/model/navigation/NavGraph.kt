@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shawn.mvvmslideproject.ui.home.HomeList
 import com.shawn.mvvmslideproject.ui.profile.ProfileScreen
+import com.shawn.mvvmslideproject.ui.upload.UploadScreen
 
 @Composable
 fun NavigationConfigurations(
@@ -24,7 +25,7 @@ fun NavigationConfigurations(
             HomeList()
         }
         composable(BottomNavItem.Search.route) {
-            HomeList()
+            UploadScreen()
         }
         composable(BottomNavItem.Profile.route) {
             ProfileScreen()

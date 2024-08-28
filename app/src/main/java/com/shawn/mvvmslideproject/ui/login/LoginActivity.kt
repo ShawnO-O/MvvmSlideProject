@@ -1,12 +1,12 @@
 package com.shawn.mvvmslideproject.ui.login
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedButton
@@ -60,30 +60,29 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
     LaunchedEffect(key1 = loginViewModel.finishSharedFlow) {
         loginViewModel.apply {
             finishSharedFlow.collect { it ->
-                Log.d("shawnTest", "it is finish")
                 (context as LoginActivity).finish()
             }
         }
     }
 
-    Scaffold { paddingValues ->
-        AccountAndPassword(
-            account,
-            password,
-            onAccountChange = {
-                loginViewModel.changeAccount(it)
-            },
-            onPasswordChange = {
-                loginViewModel.changePassword(it)
-            },
-            onLoginClick = {
-                loginViewModel.login(account, password)
-            },
-            onRegisterClick = {
-                loginViewModel.register(account, password)
-            },
-            paddingValues
-        )
+    Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+            AccountAndPassword(
+                account,
+                password,
+                onAccountChange = {
+                    loginViewModel.changeAccount(it)
+                },
+                onPasswordChange = {
+                    loginViewModel.changePassword(it)
+                },
+                onLoginClick = {
+                    loginViewModel.login(account, password)
+                },
+                onRegisterClick = {
+                    loginViewModel.register(account, password)
+                },
+                paddingValues
+            )
     }
 }
 

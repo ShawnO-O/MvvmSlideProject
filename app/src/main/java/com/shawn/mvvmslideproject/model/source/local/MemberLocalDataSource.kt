@@ -57,7 +57,6 @@ class MemberLocalDataSource@Inject constructor() {
 //        if (memberInfo == null) {
 //            memberInfo = getMemberInfo()
 //        }
-//        Log.d("shawnTest","memberInfo:$memberInfo")
 //        return memberInfo?.let {
 //            it.memberId != 0 && it.memberId > 0
 //        } == true

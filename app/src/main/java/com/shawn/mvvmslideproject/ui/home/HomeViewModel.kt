@@ -1,7 +1,5 @@
 package com.shawn.mvvmslideproject.ui.home
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shawn.mvvmslideproject.model.data.home.Info
 import com.shawn.mvvmslideproject.model.source.repository.home.HomeRepositoryImpl
@@ -41,7 +39,6 @@ class HomeViewModel @Inject constructor(private val homeRepositoryImpl: HomeRepo
 
                     }
                 }
-                Log.d("shawnTest", "it:$it")
 //                stateFlow.value =
             }
         }

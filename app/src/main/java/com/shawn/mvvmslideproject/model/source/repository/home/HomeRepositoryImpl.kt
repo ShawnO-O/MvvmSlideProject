@@ -1,5 +1,7 @@
 package com.shawn.mvvmslideproject.model.source.repository.home
 
+import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
+import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.model.data.home.AttractionsResponse
 import com.shawn.mvvmslideproject.model.source.remote.home.HomeRomeDataSource
 import com.shawn.mvvmslideproject.util.Resource
@@ -28,7 +30,7 @@ class HomeRepositoryImpl @Inject constructor(private var homeRomeDataSource: Hom
             val result = homeRomeDataSource.getAttractions(page, lang)
             result.body()?.let {
                 emit(Resource.Success(it))
-            } ?: emit(Resource.Error("沒有更多資料了", result.code()))
+            } ?: emit(Resource.Error(MvvmSlideProjectApplication.getStringResource(R.string.list_data_empty), result.code()))
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.shawn.mvvmslideproject.model.source.local.login
 
+import androidx.compose.ui.res.stringResource
+import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
+import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
 import javax.inject.Inject
 
@@ -7,9 +10,9 @@ class LoginLocalDataSource @Inject constructor() {
 
     fun validLoginId(account: String): Pair<Boolean, String> {
         if (!isStringMustOver6Char(account)) {
-            return Pair(false, "帳號必須大於六個字元")
+            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.account_should_over_six_char))
         } else if (!isAccountStartWithAlphabet(account)) {
-            return Pair(false, "帳號開頭必須為英文字母")
+            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.account_should_start_with_alphabet))
         }
         return Pair(true, "")
     }
@@ -22,9 +25,9 @@ class LoginLocalDataSource @Inject constructor() {
 
     fun validPassword(password: String): Pair<Boolean, String> {
         if (!isStringMustOver6Char(password)) {
-            return Pair(false, "密碼必須大於六個字元")
+            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.password_should_over_six_char))
         } else if ((!isPasswordContainAlphabet(password) || !isPasswordContainNumber(password))) {
-            return Pair(false, "密碼必須包含英文字母及數字")
+            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.password_should_contain_alphabet_and_number))
         }
         return Pair(true, "")
     }
