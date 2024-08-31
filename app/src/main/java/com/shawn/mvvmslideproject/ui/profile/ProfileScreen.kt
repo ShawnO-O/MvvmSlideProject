@@ -1,7 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.shawn.mvvmslideproject.ui.profile
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -16,11 +17,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,6 +56,10 @@ import com.shawn.mvvmslideproject.util.OnlyGetPermission
 import com.shawn.mvvmslideproject.util.ShowToastLong
 import com.shawn.mvvmslideproject.util.createImageFile
 import com.shawn.mvvmslideproject.util.useCamera2
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 
 
@@ -66,6 +77,12 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     var showEditNameDialog by remember { mutableStateOf(false) }
     var showEditEmailDialog by remember { mutableStateOf(false) }
     var showRationale by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Instant.now().toEpochMilli()
+    )
+
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
@@ -95,14 +112,20 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             }
         }
     }
+    LaunchedEffect(key1 = Unit) {
+        profileViewModel.hasMemberId()
+        if(hasMemberId){
+            profileViewModel.getProfileData()
+        }
+    }
 
-    profileViewModel.hasMemberId()
+
     OnlyGetPermission(showRationale,
         onShowDialog = {
             showRationale = true
         },
         onGranted = {
-            useCamera2(context,uri,cameraLauncher) {
+            useCamera2(context, uri, cameraLauncher) {
                 showRationale = true
             }
         },
@@ -110,7 +133,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             showRationale = false
         })
     if (hasMemberId) {
-        profileViewModel.getProfileData()
         ProfileMemberScreen(
             photo,
             profileInfo,
@@ -122,16 +144,14 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
                 showEditNameDialog = true
             },
             birthEditClick = {
-
+                showDatePicker = true
             },
             emailEditClick = {
                 showEditEmailDialog = true
             },
-            onGenderChange = {
-                profileViewModel.saveGender(it)
-            },
+            onGenderChange = profileViewModel::saveGender,
             onCameraClick = {
-                useCamera2(context,uri,cameraLauncher) {
+                useCamera2(context, uri, cameraLauncher) {
                     showRationale = true
                 }
             }
@@ -153,7 +173,8 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
         },
         closeDialog = {
             showLogoutDialog = false
-        })
+        }
+    )
 
     InitEditDialog(
         showDialog = showEditNameDialog,
@@ -165,7 +186,8 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
         },
         closeDialog = {
             showEditNameDialog = false
-        })
+        }
+    )
 
     InitEditDialog(
         showDialog = showEditEmailDialog,
@@ -180,12 +202,40 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
         },
         keyboardType = KeyboardType.Email
     )
+
+    var timeStamp: Long? = 0L
+    if(profileInfo.birthDay?.isNotEmpty() == true) {
+        val localDate = LocalDate.parse(profileInfo.birthDay, dateFormatter)
+         timeStamp = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    }
+    LaunchedEffect(key1 = timeStamp){
+        datePickerState.selectedDateMillis = timeStamp
+    }
+    CustomDatePickerDialog(
+        showDatePicker,
+        datePickerState,
+        onDismissRequest = {
+            showDatePicker = false
+        },
+        onConfirmButtonClicked = {
+            //將時間戳計轉成yyyyMMdd
+            if (it != null) {
+                val selectDate = Instant
+                    .ofEpochMilli(it)
+                    .atZone(ZoneId.of("UTC+8"))
+                    .toLocalDate()
+                    .format(dateFormatter)
+                profileViewModel.saveBirth(selectDate)
+            }
+
+            showDatePicker = false
+        }
+    )
 }
 
-//@Preview(showBackground = true)
 @Composable
 fun ProfileMemberScreen(
-    photo:String,
+    photo: String,
     profileInfo: ProfileInfo,
     hasMemberId: Boolean,
     logoutClick: () -> Unit = {},
@@ -193,8 +243,9 @@ fun ProfileMemberScreen(
     birthEditClick: () -> Unit = {},
     emailEditClick: () -> Unit = {},
     onGenderChange: (String) -> Unit = {},
-    onCameraClick:() -> Unit = {}
+    onCameraClick: () -> Unit = {}
 ) {
+
     Box(modifier = Modifier.fillMaxSize(1f)) {
         if (hasMemberId)
             Text(
@@ -249,6 +300,7 @@ fun ProfileMemberScreen(
                     profileInfo.gender ?: "",
                     onGenderChange = { onGenderChange(it) })
             }
+
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -288,6 +340,47 @@ fun ProfileMemberScreen(
                 }
             }
         }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDatePickerDialog(
+    showDatePicker: Boolean,
+    state: DatePickerState,
+    confirmButtonText: String = "OK",
+    dismissButtonText: String = "Cancel",
+    onDismissRequest: () -> Unit,
+    onConfirmButtonClicked: (Long?) -> Unit
+) {
+    if (showDatePicker) {
+
+        DatePickerDialog(
+            onDismissRequest = onDismissRequest,
+            confirmButton = {
+                TextButton(
+                    onClick = { onConfirmButtonClicked(state.selectedDateMillis) }
+                ) {
+                    Text(text = confirmButtonText)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismissRequest
+                ) {
+                    Text(text = dismissButtonText)
+                }
+            },
+            content = {
+                DatePicker(
+                    state = state,
+                    showModeToggle = false,
+                    headline = null,
+                    title = null
+                )
+            }
+        )
     }
 }
 

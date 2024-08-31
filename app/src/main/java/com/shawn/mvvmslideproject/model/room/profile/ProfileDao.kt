@@ -28,4 +28,7 @@ interface ProfileDao {
 
     @Query("UPDATE profileInfo SET gender = :gender where memberId = :memberId")
     fun updateGender(gender:String,memberId:String)
+
+    @Query("UPDATE profileInfo SET birthDay = :birthDay where memberId = :memberId")
+    fun updateBirth(birthDay:String,memberId:String)
 }

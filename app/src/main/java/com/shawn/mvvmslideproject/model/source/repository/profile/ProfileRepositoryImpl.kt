@@ -72,7 +72,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun updateProfileGender(gender: String): Flow<ProfileSealedStatus> {
         return flow {
-            if (!profileLocalDataSource.isProfileGenderCorrect(gender)) {
+            if (profileLocalDataSource.isProfileGenderCorrect(gender)) {
                 withContext(Dispatchers.IO) {
                     profileDao.updateGender(gender, "${memberLocalDataSource.getMemberId()}")
                 }
@@ -86,6 +86,9 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun updateProfileBirth(birth: String): Flow<ProfileSealedStatus> {
         return flow {
             if (profileLocalDataSource.isProfileBirthCorrect(birth)) {
+               withContext(Dispatchers.IO){
+                   profileDao.updateBirth(birth,"${memberLocalDataSource.getMemberId()}")
+               }
                 emit(ProfileSealedStatus.Success)
             } else {
                 emit(ProfileSealedStatus.ShouldNotBeEmpty(ResumeFieldType.BIRTH))
