@@ -5,10 +5,25 @@
     <string name="login_password">密碼</string>
     <string name="login">登入</string>
     <string name="register">註冊</string>
-    <string name="login_first">請先登入</string>
     <string name="list_data_empty">沒有更多資料了</string>
-    <string name="account_should_over_six_char">帳號必須大於六個字元</string>\
+    <string name="format_error">格式錯誤</string>
+    <!--login-->
+    <string name="login_first">請先登入</string>
+    <string name="account_should_over_six_char">帳號必須大於六個字元</string>
     <string name="account_should_start_with_alphabet">帳號開頭必須為英文字母</string>
     <string name="password_should_over_six_char">密碼必須大於六個字元</string>
     <string name="password_should_contain_alphabet_and_number">密碼必須包含英文字母及數字</string>
+    <string name="account_not_exists">帳號不存在，請先註冊</string>
+    <string name="invalid_account_or_password">帳號或密碼錯誤！</string>
+    <string name="account_and_password_correct">登入成功</string>
+    <!--Register-->
+    <string name="register_success_auto_login">註冊成功，將自動登入</string>
+    <string name="register_fail_contact_customer_service">註冊失敗，請聯絡客服</string>
+    <string name="register_account_already_exits">帳號已經存在，請登入</string>
+    <!--Profile-->
+    <string name="profile_name">名稱</string>
+    <string name="profile_gender">性別</string>
+    <string name="profile_birth">生日</string>
+    <string name="profile_email">電子郵件</string>
+    <string name="shoule_not_empty">$s不可為空</string>
 </resources>

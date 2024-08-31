@@ -5,9 +5,9 @@ sealed class LoginStatus {
     data class Success(val mId:Int) : LoginStatus()
     data object AccountAndPasswordCorrect : LoginStatus(){}
     data class InvalidAccountIdFormat(val message:String, val statusCode:Int) : LoginStatus()
-    data class AccountNotExists(val message:String): LoginStatus()
+    data object AccountNotExists: LoginStatus()
     data class InvalidPasswordFormat(val message:String, val statusCode:Int): LoginStatus()
-    data class InvalidPassword(val message:String):LoginStatus()
+    data object InvalidPassword:LoginStatus()
 }
 
 sealed class LogoutStatus{
@@ -16,6 +16,7 @@ sealed class LogoutStatus{
 }
 
 sealed class RegisterStatus{
+    data object AccountAlreadyExist:RegisterStatus()
     data object Success:RegisterStatus()
     data object Fail:RegisterStatus()
 }

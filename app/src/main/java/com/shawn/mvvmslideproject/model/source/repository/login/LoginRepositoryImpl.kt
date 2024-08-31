@@ -1,12 +1,10 @@
 package com.shawn.mvvmslideproject.model.source.repository.login
 
-import android.util.Log
 import com.shawn.mvvmslideproject.model.room.member.MemberDao
 import com.shawn.mvvmslideproject.model.room.member.MemberInfo
 import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource
 import com.shawn.mvvmslideproject.model.source.local.login.LoginLocalDataSource
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
-import com.shawn.mvvmslideproject.ui.login.LogoutStatus
 import com.shawn.mvvmslideproject.ui.login.RegisterStatus
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +19,8 @@ class LoginRepositoryImpl @Inject constructor(
     private val memberLocalDataSource: MemberLocalDataSource,
     private val memberDao: MemberDao
 ) : LoginRepository {
+    private var member: MemberInfo? = null
+    private var checkLoginResult: MemberInfo? = null
 
     override suspend fun saveMemberId(mId: Int) {
         memberLocalDataSource.saveId(mId)
@@ -32,13 +32,11 @@ class LoginRepositoryImpl @Inject constructor(
             when (status) {
                 is LoginStatus.AccountAndPasswordCorrect -> {
                     //這邊要check帳號是否存在
-                    var member: MemberInfo? = null
                     withContext(Dispatchers.IO) {
                         member = memberDao.getMemberByAccount(account)
                     }
                     if (member != null) {
                         //帳號存在那就要檢查密碼是否正確
-                        var checkLoginResult: MemberInfo? = null
                         withContext(Dispatchers.IO) {
                             checkLoginResult =
                                 memberDao.checkLoginAccountAndPassword(account, password)
@@ -48,10 +46,10 @@ class LoginRepositoryImpl @Inject constructor(
                                 emit(LoginStatus.Success(it.id))
                             }
                         } else {
-                            emit(LoginStatus.InvalidPassword("帳號或密碼錯誤！"))
+                            emit(LoginStatus.InvalidPassword)
                         }
                     } else {
-                        emit(LoginStatus.AccountNotExists("帳號不存在，請先註冊"))
+                        emit(LoginStatus.AccountNotExists)
                     }
                 }
 
@@ -69,21 +67,32 @@ class LoginRepositoryImpl @Inject constructor(
     override suspend fun register(account: String, password: String): Flow<RegisterStatus> {
         return flow {
             var result = 0L
+            var haveAccount = false
             withContext(Dispatchers.IO) {
-                result = memberDao.insertMember(
-                    MemberInfo(
-                        account = account,
-                        password = password,
-                        latestLoginTime = (System.currentTimeMillis() / 100).toString()
-                    )
-                )
+                haveAccount = isAlreadyHaveAccount(account)
             }
-
-            if (result == -1L) {
-                emit(RegisterStatus.Fail)
+            if (!haveAccount) {
+                withContext(Dispatchers.IO) {
+                    result = insertMember(
+                        MemberInfo(
+                            account = account,
+                            password = password,
+                            latestLoginTime = (System.currentTimeMillis() / 100).toString()
+                        )
+                    )
+                }
+                if (result == -1L) {
+                    emit(RegisterStatus.Fail)
+                } else {
+                    emit(RegisterStatus.Success)
+                }
             } else {
-                emit(RegisterStatus.Success)
+                emit(RegisterStatus.AccountAlreadyExist)
             }
         }
     }
+
+    fun isAlreadyHaveAccount(account: String) = memberDao.getMemberByAccount(account) != null
+
+    fun insertMember(memberInfo: MemberInfo) = memberDao.insertMember(memberInfo)
 }

@@ -1,9 +1,6 @@
-package com.shawn.mvvmslideproject
+package com.shawn.mvvmslideproject.model
 
 import com.shawn.mvvmslideproject.model.source.local.login.LoginLocalDataSource
-import com.shawn.mvvmslideproject.ui.login.LoginStatus
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -56,6 +53,5 @@ class LoginTest {
         Assert.assertEquals(false,loginLocalDataSource.isStringMustOver6Char("12345"))
         Assert.assertEquals(true,loginLocalDataSource.isStringMustOver6Char("123456"))
         Assert.assertEquals(true,loginLocalDataSource.isStringMustOver6Char("1234567"))
-
     }
 }

@@ -12,7 +12,11 @@ interface MemberDao {
     fun getAllMember(): List<MemberInfo>
 
     @Query("SELECT * FROM members WHERE account = :account")
-    fun getMemberByAccount(account: String): MemberInfo
+    fun getMemberByAccount(account: String): MemberInfo?
+
+    //計算這條件數量有多少
+    @Query("SELECT COUNT(*) FROM members WHERE account = :account")
+    fun getMemberCountByAccount(account: String): Long
 
     @Query("SELECT * FROM members WHERE account=:account AND password=:password")
     fun checkLoginAccountAndPassword(account: String, password: String): MemberInfo?

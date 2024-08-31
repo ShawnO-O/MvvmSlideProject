@@ -4,10 +4,25 @@
     <string name="login_password">Password</string>
     <string name="login">SignIn</string>
     <string name="register">SignUp</string>
-    <string name="login_first">Sign In Now</string>
     <string name="list_data_empty">No more data!</string>
-    <string name="account_should_over_six_char">Account Should Over Six Char</string>\
+    <string name="format_error">Format Error</string>
+    <!--login-->
+    <string name="login_first">Sign In Now</string>
+    <string name="account_should_over_six_char">Account Should Over Six Char</string>
     <string name="account_should_start_with_alphabet">Account Should Start With Alphabet</string>
     <string name="password_should_over_six_char">Password Should Over Six Char</string>
     <string name="password_should_contain_alphabet_and_number">Password Should Contain Alphabet And Number</string>
+    <string name="account_not_exists">Account Not Exists</string>
+    <string name="invalid_account_or_password">Invalid Account Or Password</string>
+    <string name="account_and_password_correct">Account And Password Correct</string>
+    <!--Register-->
+    <string name="register_success_auto_login">註冊成功，將自動登入</string>
+    <string name="register_fail_contact_customer_service">註冊失敗，請聯絡客服</string>
+    <string name="register_account_already_exits">帳號已經存在，請登入</string>
+    <!--Profile-->
+    <string name="profile_name">Name</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_birth">Birth</string>
+    <string name="profile_email">Email</string>
+    <string name="shoule_not_empty">$s Should Not Empty</string>
 </resources>

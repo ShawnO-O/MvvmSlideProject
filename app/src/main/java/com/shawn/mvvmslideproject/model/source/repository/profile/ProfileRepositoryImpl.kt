@@ -5,6 +5,7 @@ import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource
 import com.shawn.mvvmslideproject.model.source.local.profile.ProfileLocalDataSource
 import com.shawn.mvvmslideproject.ui.profile.ProfileSealedStatus
+import com.shawn.mvvmslideproject.ui.profile.ResumeFieldType
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -77,7 +78,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 emit(ProfileSealedStatus.Success)
             } else {
-                emit(ProfileSealedStatus.ShouldNotBeEmpty("性別不可為空"))
+                emit(ProfileSealedStatus.ShouldNotBeEmpty(ResumeFieldType.GENDER))
             }
         }
     }
@@ -87,7 +88,7 @@ class ProfileRepositoryImpl @Inject constructor(
             if (profileLocalDataSource.isProfileBirthCorrect(birth)) {
                 emit(ProfileSealedStatus.Success)
             } else {
-                emit(ProfileSealedStatus.ShouldNotBeEmpty("生日不可為空"))
+                emit(ProfileSealedStatus.ShouldNotBeEmpty(ResumeFieldType.BIRTH))
             }
         }
     }
@@ -100,7 +101,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 emit(ProfileSealedStatus.Success)
             } else {
-                emit(ProfileSealedStatus.FormatError("格式錯誤"))
+                emit(ProfileSealedStatus.FormatError)
             }
         }
     }

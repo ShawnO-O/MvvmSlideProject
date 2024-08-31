@@ -106,5 +106,10 @@ dependencies {
     //import mockito
     testImplementation ("io.mockk:mockk:1.13.12")
     androidTestImplementation ("io.mockk:mockk-android:1.13.12")
-
+    //test for coroutines
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+    //For InstantTaskExecutorRule
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
+    //test for flow
+    testImplementation("app.cash.turbine:turbine:0.12.1")
 }

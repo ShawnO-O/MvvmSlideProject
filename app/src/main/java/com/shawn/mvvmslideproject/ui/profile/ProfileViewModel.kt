@@ -1,6 +1,8 @@
 package com.shawn.mvvmslideproject.ui.profile
 
 import androidx.lifecycle.viewModelScope
+import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
+import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.model.source.repository.login.LoginRepositoryImpl
 import com.shawn.mvvmslideproject.model.source.repository.profile.ProfileRepositoryImpl
@@ -10,6 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+enum class ResumeFieldType {
+    NAME, GENDER, BIRTH, EMAIL
+}
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -48,10 +54,11 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is ProfileSealedStatus.ShouldNotBeEmpty -> {
-                        _toastShardFlow.emit(it.message)
+                        _toastShardFlow.emit(it.type.showProfileEditErrorToast())
                     }
-                    is ProfileSealedStatus.FormatError->{
-                        _toastShardFlow.emit(it.message)
+
+                    is ProfileSealedStatus.FormatError -> {
+                        _toastShardFlow.emit(showProfileEditFormatError())
                     }
                 }
             }
@@ -69,11 +76,13 @@ class ProfileViewModel @Inject constructor(
                     is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
                     }
+
                     is ProfileSealedStatus.ShouldNotBeEmpty -> {
-                        _toastShardFlow.emit(it.message)
+                        _toastShardFlow.emit(it.type.showProfileEditErrorToast())
                     }
-                    is ProfileSealedStatus.FormatError->{
-                        _toastShardFlow.emit(it.message)
+
+                    is ProfileSealedStatus.FormatError -> {
+                        _toastShardFlow.emit(showProfileEditFormatError())
                     }
                 }
             }
@@ -91,21 +100,23 @@ class ProfileViewModel @Inject constructor(
                     is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
                     }
+
                     is ProfileSealedStatus.ShouldNotBeEmpty -> {
-                        _toastShardFlow.emit(it.message)
+                        _toastShardFlow.emit(it.type.showProfileEditErrorToast())
                     }
-                    is ProfileSealedStatus.FormatError->{
-                        _toastShardFlow.emit(it.message)
+
+                    is ProfileSealedStatus.FormatError -> {
+                        _toastShardFlow.emit(showProfileEditFormatError())
                     }
                 }
             }
         }
     }
 
-    fun saveBirth(birth: String){
+    fun saveBirth(birth: String) {
         viewModelScope.launch {
-            profileRepositoryImpl.updateProfileBirth(birth).collect{
-                when(it){
+            profileRepositoryImpl.updateProfileBirth(birth).collect {
+                when (it) {
                     is ProfileSealedStatus.Success -> {
                         _toastShardFlow.emit("儲存成功")
                     }
@@ -113,16 +124,43 @@ class ProfileViewModel @Inject constructor(
                     is ProfileSealedStatus.Failed -> {
                         //TODO not yet implemented
                     }
+
                     is ProfileSealedStatus.ShouldNotBeEmpty -> {
-                        _toastShardFlow.emit(it.message)
+                        _toastShardFlow.emit(it.type.showProfileEditErrorToast())
                     }
-                    is ProfileSealedStatus.FormatError->{
-                        _toastShardFlow.emit(it.message)
+
+                    is ProfileSealedStatus.FormatError -> {
+                        _toastShardFlow.emit(showProfileEditFormatError())
                     }
                 }
             }
         }
     }
+
+    fun showProfileEditFormatError() =
+        MvvmSlideProjectApplication.getStringResource(R.string.format_error)
+
+    fun ResumeFieldType.showProfileEditErrorToast() =
+        String.format(
+            MvvmSlideProjectApplication.getStringResource(R.string.shoule_not_empty),
+            when (this) {
+                ResumeFieldType.NAME -> MvvmSlideProjectApplication.getStringResource(
+                    R.string.profile_name
+                )
+
+                ResumeFieldType.GENDER -> MvvmSlideProjectApplication.getStringResource(
+                    R.string.profile_gender
+                )
+
+                ResumeFieldType.BIRTH -> MvvmSlideProjectApplication.getStringResource(
+                    R.string.profile_birth
+                )
+
+                ResumeFieldType.EMAIL -> MvvmSlideProjectApplication.getStringResource(
+                    R.string.profile_email
+                )
+            }
+        )
 
     fun logout() {
         //fack just clear member info

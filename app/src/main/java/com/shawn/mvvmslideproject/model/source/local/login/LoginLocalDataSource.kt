@@ -1,6 +1,5 @@
 package com.shawn.mvvmslideproject.model.source.local.login
 
-import androidx.compose.ui.res.stringResource
 import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
 import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
