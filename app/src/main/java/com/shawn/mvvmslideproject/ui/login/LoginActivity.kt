@@ -66,23 +66,12 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
-            AccountAndPassword(
-                account,
-                password,
-                onAccountChange = {
-                    loginViewModel.changeAccount(it)
-                },
-                onPasswordChange = {
-                    loginViewModel.changePassword(it)
-                },
-                onLoginClick = {
-                    loginViewModel.login(account, password)
-                },
-                onRegisterClick = {
-                    loginViewModel.register(account, password)
-                },
-                paddingValues
-            )
+        AccountAndPassword(
+            account,
+            password,
+            loginViewModel,
+            paddingValues
+        )
     }
 }
 
@@ -91,17 +80,14 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
 fun AccountAndPassword(
     account: String = "",
     password: String = "",
-    onAccountChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {},
-    onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {},
+    loginViewModel: LoginViewModel,
     paddingValues: PaddingValues,
 ) {
 
     Column(modifier = Modifier.padding(paddingValues)) {
         OutlinedTextField(
             value = account,
-            onValueChange = onAccountChange,
+            onValueChange = { loginViewModel.changeAccount(it) },
             modifier = Modifier
                 .padding(20.dp)
                 .align(Alignment.CenterHorizontally),
@@ -110,7 +96,7 @@ fun AccountAndPassword(
         )
         OutlinedTextField(
             value = password,
-            onValueChange = onPasswordChange,
+            onValueChange = { loginViewModel.changePassword(it) },
             modifier = Modifier
                 .padding(20.dp)
                 .align(Alignment.CenterHorizontally),
@@ -122,7 +108,7 @@ fun AccountAndPassword(
                 modifier = Modifier
                     .weight(1f)
                     .padding(20.dp),
-                onClick = onRegisterClick
+                onClick = { loginViewModel.register(account, password) }
             ) {
                 Text(text = stringResource(id = R.string.register))
             }
@@ -130,7 +116,7 @@ fun AccountAndPassword(
                 modifier = Modifier
                     .weight(1f)
                     .padding(20.dp),
-                onClick = onLoginClick
+                onClick = { loginViewModel.login(account, password) }
             ) {
                 Text(text = stringResource(id = R.string.login))
             }

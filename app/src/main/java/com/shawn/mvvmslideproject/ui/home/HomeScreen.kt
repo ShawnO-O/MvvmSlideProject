@@ -64,7 +64,8 @@ fun HomeList(
         ContentList(
             attractions.value,
             innerPadding,
-            loadMoreListener = { homeViewModel.getAttractionsMore() })
+            homeViewModel
+        )
     }
 }
 
@@ -72,7 +73,7 @@ fun HomeList(
 fun ContentList(
     contacts: MutableList<Info>,
     innerPadding: PaddingValues,
-    loadMoreListener: () -> Unit = {}
+    homeViewModel: HomeViewModel
 ) {
     val buffer = 3 // load more when scroll reaches last n item, where n >= 1
     val listState = rememberLazyListState()
@@ -84,7 +85,7 @@ fun ContentList(
     }
 
     LaunchedEffect(reachedBottom) {
-        if (reachedBottom) loadMoreListener.invoke()
+        if (reachedBottom) homeViewModel.getAttractionsMore()
     }
 
     LazyColumn(state = listState, modifier = Modifier.padding(innerPadding)) {
