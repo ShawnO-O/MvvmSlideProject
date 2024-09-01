@@ -14,6 +14,9 @@ data class ProfileInfo(
     @ColumnInfo("memberId")
     val memberId:Int = 0,
 
+    //by link
+    var headerShot:String?="https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444",
+
     var name:String?="",
 
     var birthDay:String?="",

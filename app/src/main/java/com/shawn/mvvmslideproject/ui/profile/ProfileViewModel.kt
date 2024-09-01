@@ -32,7 +32,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-
     fun getProfileData() {
         viewModelScope.launch {
             profileRepositoryImpl.getProfileInfo().collect {

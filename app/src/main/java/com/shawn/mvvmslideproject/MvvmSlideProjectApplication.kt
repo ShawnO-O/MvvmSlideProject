@@ -20,5 +20,10 @@ class MvvmSlideProjectApplication:Application() {
         fun getStringResource(id:Int):String{
             return applicationContext().getString(id)
         }
+
+        fun getColorResource(id:Int):Int{
+            return applicationContext().getColor(id)
+
+        }
     }
 }
