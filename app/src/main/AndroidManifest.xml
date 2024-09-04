@@ -14,8 +14,12 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 設定檔案權限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
     <!-- 設定通知權限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
@@ -37,8 +41,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -50,9 +55,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity"
-            android:theme="@style/Theme.MvvmSlideProject"
-            />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:theme="@style/Theme.MvvmSlideProject" />
         <activity android:name="com.shawn.mvvmslideproject.ui.tool.BigPhotoViewerActivity" />
     </application>
 

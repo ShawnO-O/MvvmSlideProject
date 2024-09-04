@@ -3,7 +3,7 @@
     <external-path name="external_files" path="."/>
     <root-path name="root" path="" />
     <files-path name="mvvmslideproject" path="." />
-    <cache-path name="cache" path="" />
-    <external-files-path name="name" path="path" />
-    <external-cache-path name="name" path="path" />
+    <cache-path name="temp_images" path="images/" />
+    <external-files-path name="my_images" path="/" />
+    <external-cache-path name="my_cache" path="cache" />
 </paths>

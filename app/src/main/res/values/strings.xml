@@ -24,5 +24,8 @@
     <string name="profile_gender">Gender</string>
     <string name="profile_birth">Birth</string>
     <string name="profile_email">Email</string>
-    <string name="shoule_not_empty">$s Should Not Empty</string>
+    <string name="should_not_empty">%s Should Not Empty</string>
+    <!--SelectMedia-->
+    <string name="select_media_camera">Camera</string>
+    <string name="select_media_album">Gallery</string>
 </resources>
