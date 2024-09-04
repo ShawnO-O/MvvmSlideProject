@@ -7,6 +7,7 @@
     <string name="register">註冊</string>
     <string name="list_data_empty">沒有更多資料了</string>
     <string name="format_error">格式錯誤</string>
+    <string name="please_fill_info">請填寫%s</string>
     <!--login-->
     <string name="login_first">請先登入</string>
     <string name="account_should_over_six_char">帳號必須大於六個字元</string>

@@ -6,6 +6,7 @@
     <string name="register">SignUp</string>
     <string name="list_data_empty">No more data!</string>
     <string name="format_error">Format Error</string>
+    <string name="please_fill_info">Please Fill %s</string>
     <!--login-->
     <string name="login_first">Sign In Now</string>
     <string name="account_should_over_six_char">Account Should Over Six Char</string>
