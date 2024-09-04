@@ -28,7 +28,6 @@ class FacilitiesDeserializer : JsonDeserializer<Facilities> {
                         Facilities.None
                     }
                 } catch (e: Exception) {
-                    Log.d("shawnTestError","facil jsonObject:$jsonObject")
                     Facilities.None
                 }
             }

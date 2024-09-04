@@ -1,4 +1,4 @@
-package com.shawn.mvvmslideproject.util.extensions
+package com.shawn.mvvmslideproject.extensions
 
 import com.shawn.mvvmslideproject.R
 

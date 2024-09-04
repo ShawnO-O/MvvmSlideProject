@@ -1,5 +1,6 @@
 package com.shawn.mvvmslideproject.ui.profile
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
 import com.shawn.mvvmslideproject.R
@@ -38,6 +39,12 @@ class ProfileViewModel @Inject constructor(
                 _profileInfo.value = it
             }
         }
+    }
+
+    fun saveHeadshot(uri:Uri){
+        val profile = _profileInfo.value
+        profile.headerShot = uri.toString()
+        _profileInfo.value = profile
     }
 
     fun saveName(name: String) {
@@ -141,7 +148,7 @@ class ProfileViewModel @Inject constructor(
 
     fun ResumeFieldType.showProfileEditErrorToast() =
         String.format(
-            MvvmSlideProjectApplication.getStringResource(R.string.shoule_not_empty),
+            MvvmSlideProjectApplication.getStringResource(R.string.should_not_empty),
             when (this) {
                 ResumeFieldType.NAME -> MvvmSlideProjectApplication.getStringResource(
                     R.string.profile_name

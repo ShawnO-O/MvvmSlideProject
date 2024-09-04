@@ -20,8 +20,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shawn.mvvmslideproject.R
-import com.shawn.mvvmslideproject.model.navigation.BottomNavItem
-import com.shawn.mvvmslideproject.model.navigation.NavigationConfigurations
+import com.shawn.mvvmslideproject.navigation.BottomNavItem
+import com.shawn.mvvmslideproject.navigation.NavigationConfigurations
 import com.shawn.mvvmslideproject.ui.base.BaseActivity
 import com.shawn.mvvmslideproject.ui.theme.BASIC_Slide_ProjectTheme
 import dagger.hilt.android.AndroidEntryPoint

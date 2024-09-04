@@ -2,9 +2,12 @@
 
 package com.shawn.mvvmslideproject.ui.profile
 
-import android.app.Activity
-import android.content.Context
+import android.Manifest
+import android.content.ContentResolver
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -16,10 +19,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -53,15 +59,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.shawn.mvvmslideproject.BuildConfig
 import com.shawn.mvvmslideproject.R
+import com.shawn.mvvmslideproject.extensions.cellTextColor
+import com.shawn.mvvmslideproject.extensions.isCellEmpty
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.ui.login.LoginActivity
-import com.shawn.mvvmslideproject.util.OnlyGetPermission
 import com.shawn.mvvmslideproject.util.ShowToastLong
+import com.shawn.mvvmslideproject.util.bottomSheets.PhotoMediaSelectBottomSheet
 import com.shawn.mvvmslideproject.util.createImageFile
-import com.shawn.mvvmslideproject.util.extensions.cellTextColor
-import com.shawn.mvvmslideproject.util.extensions.isCellEmpty
-import com.shawn.mvvmslideproject.util.useCamera2
+import com.shawn.mvvmslideproject.util.useAlbum
+import com.shawn.mvvmslideproject.util.useCamera
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -72,24 +80,15 @@ import java.util.Objects
 //搭配登入、註冊使用
 //使用room實作
 
-
 @Composable
 fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
+    val context = LocalContext.current
     val hasMemberId by profileViewModel.hasMemberId.collectAsState(initial = false)
     val profileInfo by profileViewModel.profileInfo.collectAsState()
-    val context = LocalContext.current
-
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Instant.now().toEpochMilli()
-    )
-
-    val dateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
     val loginLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-                profileViewModel.hasMemberId()
-//            }
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            profileViewModel.hasMemberId()
         }
 
     LaunchedEffect(key1 = profileViewModel.toastSharedFlow) {
@@ -105,7 +104,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     if (hasMemberId) {
         profileViewModel.getProfileData()
         ProfileMemberScreen(
-            context,
             profileInfo,
             profileViewModel
         )
@@ -115,26 +113,25 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             loginLauncher.launch(intent)
         })
     }
+}
 
-
-    var timeStamp: Long? = 0L
-    if (profileInfo.birthDay?.isNotEmpty() == true) {
-        val localDate = LocalDate.parse(profileInfo.birthDay, dateFormatter)
-        timeStamp = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    }
-    LaunchedEffect(key1 = timeStamp) {
-        datePickerState.selectedDateMillis = timeStamp
+fun getBitmapFromUri(uri: Uri, contentResolver: ContentResolver): Bitmap? {
+    return contentResolver.openInputStream(uri)?.use { inputStream ->
+        BitmapFactory.decodeStream(inputStream)
     }
 }
 
-
 @Composable
 fun ProfileMemberScreen(
-    context: Context,
     profileInfo: ProfileInfo,
     profileViewModel: ProfileViewModel
 ) {
-    Column{
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.TopEnd
@@ -146,7 +143,7 @@ fun ProfileMemberScreen(
             contentAlignment = Alignment.Center
         ) {
             Column {
-                HeadShotCell(context, profileInfo, profileViewModel)
+                HeadShotCell(profileInfo, profileViewModel)
                 NameCell(profileInfo, profileViewModel)
                 GenderCell(profileInfo, profileViewModel)
                 BirthDayCell(profileInfo, profileViewModel)
@@ -154,6 +151,144 @@ fun ProfileMemberScreen(
             }
         }
     }
+}
+
+@Composable
+fun HeadShotCell(profileInfo: ProfileInfo, profileViewModel: ProfileViewModel) {
+
+    val context = LocalContext.current
+    val file = remember { context.createImageFile() }
+    val uri = remember {
+        FileProvider.getUriForFile(
+            Objects.requireNonNull(context),
+            BuildConfig.APPLICATION_ID + ".provider", file
+        )
+    }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var showCameraRationale by remember { mutableStateOf(false) }
+    var showAlbumRationale by remember { mutableStateOf(false) }
+    var capturedImageUri by remember { mutableStateOf<Uri>(Uri.EMPTY) }
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { Success ->
+            if (Success) {
+                capturedImageUri = uri
+                profileViewModel.saveHeadshot(capturedImageUri)
+            }
+        }
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { backUri: Uri? ->
+        if (backUri != null) {
+            capturedImageUri = backUri
+            profileViewModel.saveHeadshot(backUri)
+            //Here sould be upload after success.
+        }
+    }
+    val cameraRequestLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                showBottomSheet = true
+            } else {
+                showCameraRationale = true
+            }
+        }
+
+    val selectMediaRequestLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions())
+        { permission: Map<String, Boolean> ->
+            val readGranted =
+                permission[Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
+            val writeGranted =
+                permission[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false
+            if (readGranted && writeGranted) {
+                showBottomSheet = true
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    albumLauncher.launch("image/*")
+                } else {
+                    showAlbumRationale = true
+                }
+            }
+        }
+
+    LaunchedEffect(capturedImageUri) {
+        // 這裡可以執行一些操作，例如重新設定 profileInfo.headerShot 的值
+        profileViewModel.saveHeadshot(capturedImageUri)
+    }
+    Column(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            //both way was worked.It's depends on the setting.
+//              model = "https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444",
+            model = ImageRequest.Builder(LocalContext.current)
+                .crossfade(true)
+                .data(profileInfo.headerShot)
+                .memoryCachePolicy(CachePolicy.ENABLED).build(),
+            error = painterResource(id = R.drawable.img_head_shot),
+            contentDescription = "",
+            placeholder = painterResource(id = R.drawable.img_head_shot),
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .size(300.dp, 300.dp)
+                .clickable {
+                    showBottomSheet = true
+                }
+                .clip(CircleShape)
+        )
+    }
+
+    if (showBottomSheet) {
+        PhotoMediaSelectBottomSheet(
+            onDismiss = { showBottomSheet = false },
+            onCameraClick = {
+                useCamera(
+                    onGetPermission = {
+                        cameraRequestLauncher.launch(Manifest.permission.CAMERA)
+                    },
+                    onCamera = {
+                        cameraLauncher.launch(uri)
+                    }
+                )
+            },
+            onAlbumClick = {
+                useAlbum(albumLauncher) {
+                    selectMediaRequestLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    )
+                }
+            }
+        )
+    }
+
+    ShowRationale(
+        "需要相機權限",
+        "此應用程式需要相機權限才能拍照。",
+        showCameraRationale,
+        onConfirm = {
+            cameraRequestLauncher.launch(
+                Manifest.permission.CAMERA
+            )
+        },
+        onDismiss = { showCameraRationale = false })
+    ShowRationale(
+        "需要相簿權限",
+        "此應用程式需要相簿權限才能選擇照片。",
+        showAlbumRationale,
+        onConfirm = {
+            selectMediaRequestLauncher.launch(
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            )
+        },
+        onDismiss = { showAlbumRationale = false })
 }
 
 @Composable
@@ -181,56 +316,31 @@ fun LogoutCell(profileViewModel: ProfileViewModel) {
     )
 }
 
-@Composable
-fun HeadShotCell(context: Context, profileInfo: ProfileInfo, profileViewModel: ProfileViewModel) {
-    var showRationale by remember { mutableStateOf(false) }
-    var photo by remember { mutableStateOf(profileInfo.headerShot) }
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        "${context.applicationContext.packageName}.provider",
-        file
-    )
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            photo = uri.toString()
-        }
-    )
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        AsyncImage(
-            //both way was worked.It's depends on the setting.
-//              model = "https://www.pili.com.tw/img/role/640x741/su_1.jpg?v=1711533444",
-            model = ImageRequest.Builder(LocalContext.current)
-                .crossfade(true)
-                .data(photo)
-                .memoryCachePolicy(CachePolicy.ENABLED).build(),
-            contentDescription = "",
-            placeholder = painterResource(id = R.drawable.img_head_shot),
-            modifier = Modifier
-                .clickable {
-                    useCamera2(context, uri, cameraLauncher) {
-                        showRationale = true
-                    }
-                }
-                .clip(CircleShape)
-        )
 
-        OnlyGetPermission(showRationale,
-            onShowDialog = {
-                showRationale = true
-            },
-            onGranted = {
-                useCamera2(context, uri, cameraLauncher) {
-                    showRationale = true
+@Composable
+fun ShowRationale(
+    title: String,
+    text: String,
+    showRationale: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    if (showRationale) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(title) },
+            text = { Text(text) },
+            confirmButton = {
+                Button(onClick = onConfirm) {
+                    Text("授予權限")
                 }
             },
-            onDismiss = {
-                showRationale = false
-            })
+            dismissButton = {
+                Button(onClick = onDismiss) {
+                    Text("取消")
+                }
+            }
+        )
     }
 }
 
@@ -348,6 +458,17 @@ fun BirthDayCell(
         initialSelectedDateMillis = Instant.now().toEpochMilli()
     )
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+
+
+    var timeStamp: Long? = 0L
+    if (profileInfo.birthDay?.isNotEmpty() == true) {
+        val localDate = LocalDate.parse(profileInfo.birthDay, dateFormatter)
+        timeStamp = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    }
+    LaunchedEffect(key1 = timeStamp) {
+        datePickerState.selectedDateMillis = timeStamp
+    }
+
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -393,11 +514,9 @@ fun BirthDayCell(
             }
         )
     }
-
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDatePickerDialog(
     state: DatePickerState,
@@ -476,3 +595,4 @@ fun ProfileGuestScreen(onLoginClick: () -> Unit = {}) {
         }
     }
 }
+

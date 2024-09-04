@@ -1,4 +1,4 @@
-package com.shawn.mvvmslideproject.model.navigation
+package com.shawn.mvvmslideproject.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
