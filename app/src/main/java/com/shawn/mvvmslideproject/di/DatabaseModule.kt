@@ -2,11 +2,9 @@ package com.shawn.mvvmslideproject.di
 
 import android.content.Context
 import androidx.room.Room
+import com.shawn.mvvmslideproject.model.room.MemberDatabase
 import com.shawn.mvvmslideproject.model.room.member.MemberDao
-import com.shawn.mvvmslideproject.model.room.member.MemberDatabase
 import com.shawn.mvvmslideproject.model.room.profile.ProfileDao
-import com.shawn.mvvmslideproject.model.room.profile.ProfileDatabase
-import com.shawn.mvvmslideproject.model.source.local.MemberLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +21,8 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideProfileDao(profileDatabase: ProfileDatabase):ProfileDao{
-        return profileDatabase.profileDao()
+    fun provideProfileDao(memberDatabase: MemberDatabase):ProfileDao{
+        return memberDatabase.profileDao()
     }
 
     @Provides
@@ -36,20 +34,4 @@ object DatabaseModule {
             name = MemberDatabase::class.java.simpleName
         ).fallbackToDestructiveMigration().build()
     }
-
-    @Provides
-    @Singleton
-    fun provideProfileDataBase(@ApplicationContext context: Context):ProfileDatabase{
-        return Room.databaseBuilder(
-            context = context,
-            klass = ProfileDatabase::class.java,
-            name = ProfileDatabase::class.java.simpleName
-        ).fallbackToDestructiveMigration().build()
-    }
-
-//    @Provides
-//    @Singleton
-//    fun provideMemberLocalDataSource():MemberLocalDataSource{
-//        return MemberLocalDataSource
-//    }
 }

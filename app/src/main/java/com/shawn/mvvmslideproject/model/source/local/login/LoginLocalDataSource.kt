@@ -1,7 +1,7 @@
 package com.shawn.mvvmslideproject.model.source.local.login
 
-import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
 import com.shawn.mvvmslideproject.R
+import com.shawn.mvvmslideproject.extensions.getStringResource
 import com.shawn.mvvmslideproject.ui.login.LoginStatus
 import javax.inject.Inject
 
@@ -9,9 +9,9 @@ class LoginLocalDataSource @Inject constructor() {
 
     fun validLoginId(account: String): Pair<Boolean, String> {
         if (!isStringMustOver6Char(account)) {
-            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.account_should_over_six_char))
+            return Pair(false, R.string.account_should_over_six_char.getStringResource())
         } else if (!isAccountStartWithAlphabet(account)) {
-            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.account_should_start_with_alphabet))
+            return Pair(false, R.string.account_should_start_with_alphabet.getStringResource())
         }
         return Pair(true, "")
     }
@@ -24,9 +24,9 @@ class LoginLocalDataSource @Inject constructor() {
 
     fun validPassword(password: String): Pair<Boolean, String> {
         if (!isStringMustOver6Char(password)) {
-            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.password_should_over_six_char))
+            return Pair(false, R.string.password_should_over_six_char.getStringResource())
         } else if ((!isPasswordContainAlphabet(password) || !isPasswordContainNumber(password))) {
-            return Pair(false, MvvmSlideProjectApplication.getStringResource(R.string.password_should_contain_alphabet_and_number))
+            return Pair(false, R.string.password_should_contain_alphabet_and_number.getStringResource())
         }
         return Pair(true, "")
     }

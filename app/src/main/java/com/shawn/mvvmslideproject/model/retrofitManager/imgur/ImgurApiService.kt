@@ -23,4 +23,11 @@ interface ImgurApiService {
         @Header("Authorization") clientId:String,
         @Part image:MultipartBody.Part
     ): Response<ImgurResponse>
+
+    @Multipart
+    @POST("3/image")
+    suspend fun uploadImage(
+        @Header("Authorization") clientId: String,
+        @Part image: MultipartBody.Part
+    ): Response<ImgurResponse>
 }

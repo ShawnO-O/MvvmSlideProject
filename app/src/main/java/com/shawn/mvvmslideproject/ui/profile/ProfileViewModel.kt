@@ -2,8 +2,8 @@ package com.shawn.mvvmslideproject.ui.profile
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
 import com.shawn.mvvmslideproject.R
+import com.shawn.mvvmslideproject.extensions.getStringResource
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.model.source.repository.login.LoginRepositoryImpl
 import com.shawn.mvvmslideproject.model.source.repository.profile.ProfileRepositoryImpl
@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveHeadshot(uri:Uri){
+    fun saveHeadshot(uri: Uri) {
         val profile = _profileInfo.value
         profile.headerShot = uri.toString()
         _profileInfo.value = profile
@@ -143,28 +143,19 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun showProfileEditFormatError() =
-        MvvmSlideProjectApplication.getStringResource(R.string.format_error)
+    private fun showProfileEditFormatError() = R.string.format_error.getStringResource()
 
-    fun ResumeFieldType.showProfileEditErrorToast() =
+    private fun ResumeFieldType.showProfileEditErrorToast() =
         String.format(
-            MvvmSlideProjectApplication.getStringResource(R.string.should_not_empty),
+            R.string.should_not_empty.getStringResource(),
             when (this) {
-                ResumeFieldType.NAME -> MvvmSlideProjectApplication.getStringResource(
-                    R.string.profile_name
-                )
+                ResumeFieldType.NAME -> R.string.profile_name.getStringResource()
 
-                ResumeFieldType.GENDER -> MvvmSlideProjectApplication.getStringResource(
-                    R.string.profile_gender
-                )
+                ResumeFieldType.GENDER -> R.string.profile_gender.getStringResource()
 
-                ResumeFieldType.BIRTH -> MvvmSlideProjectApplication.getStringResource(
-                    R.string.profile_birth
-                )
+                ResumeFieldType.BIRTH -> R.string.profile_birth.getStringResource()
 
-                ResumeFieldType.EMAIL -> MvvmSlideProjectApplication.getStringResource(
-                    R.string.profile_email
-                )
+                ResumeFieldType.EMAIL -> R.string.profile_email.getStringResource()
             }
         )
 

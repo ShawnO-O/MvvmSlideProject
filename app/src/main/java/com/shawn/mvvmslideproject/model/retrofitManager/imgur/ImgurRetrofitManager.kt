@@ -14,6 +14,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ImgurRetrofitManager {
+    private val BASE_URL = "https://api.imgur.com/"
+    private val CLIENT_ID = "YOUR_IMGUR_CLIENT_ID" // Replace with your Imgur client ID
+
     private var retrofit: Retrofit
     private var imgurApiService: ImgurApiService
 
@@ -27,6 +30,7 @@ object ImgurRetrofitManager {
         val baseUrl = UrlManager.IMGUR_BASE_URL
 
         retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseUrl)

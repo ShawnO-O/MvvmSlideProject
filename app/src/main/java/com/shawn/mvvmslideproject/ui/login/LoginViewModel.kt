@@ -1,8 +1,8 @@
 package com.shawn.mvvmslideproject.ui.login
 
 import androidx.lifecycle.viewModelScope
-import com.shawn.mvvmslideproject.MvvmSlideProjectApplication
 import com.shawn.mvvmslideproject.R
+import com.shawn.mvvmslideproject.extensions.getStringResource
 import com.shawn.mvvmslideproject.model.source.repository.login.LoginRepositoryImpl
 import com.shawn.mvvmslideproject.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ class LoginViewModel @Inject constructor(
                 when (it) {
                     is LoginStatus.Success -> {
                         loginRepositoryImpl.saveMemberId(it.mId)
-                        _toastShardFlow.emit(MvvmSlideProjectApplication.getStringResource(R.string.account_and_password_correct))
+                        _toastShardFlow.emit(R.string.account_and_password_correct.getStringResource())
                         _finishSharedFlow.emit(true)
                     }
 
@@ -37,7 +37,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is LoginStatus.AccountNotExists -> {
-                        _toastShardFlow.emit(MvvmSlideProjectApplication.getStringResource(R.string.account_not_exists))
+                        _toastShardFlow.emit(R.string.account_not_exists.getStringResource())
                     }
 
                     is LoginStatus.InvalidPasswordFormat -> {
@@ -45,7 +45,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is LoginStatus.InvalidPassword -> {
-                        _toastShardFlow.emit(MvvmSlideProjectApplication.getStringResource(R.string.invalid_account_or_password))
+                        _toastShardFlow.emit(R.string.invalid_account_or_password.getStringResource())
                     }
 
                     LoginStatus.AccountAndPasswordCorrect -> {
@@ -62,26 +62,20 @@ class LoginViewModel @Inject constructor(
                 when (it) {
                     is RegisterStatus.Success -> {
                         _toastShardFlow.emit(
-                            MvvmSlideProjectApplication.getStringResource(
-                                R.string.register_success_auto_login
-                            )
+                            R.string.register_success_auto_login.getStringResource()
                         )
                         login(account, password)
                     }
 
                     is RegisterStatus.Fail -> {
                         _toastShardFlow.emit(
-                            MvvmSlideProjectApplication.getStringResource(
-                                R.string.register_fail_contact_customer_service
-                            )
+                            R.string.register_fail_contact_customer_service.getStringResource()
                         )
                     }
 
                     is RegisterStatus.AccountAlreadyExist -> {
                         _toastShardFlow.emit(
-                            MvvmSlideProjectApplication.getStringResource(
-                                R.string.register_account_already_exits
-                            )
+                            R.string.register_account_already_exits.getStringResource()
                         )
                     }
                 }

@@ -143,7 +143,7 @@ fun ProfileMemberScreen(
             contentAlignment = Alignment.Center
         ) {
             Column {
-                HeadShotCell(profileInfo, profileViewModel)
+                HeadshotCell(profileInfo, profileViewModel)
                 NameCell(profileInfo, profileViewModel)
                 GenderCell(profileInfo, profileViewModel)
                 BirthDayCell(profileInfo, profileViewModel)
@@ -154,7 +154,7 @@ fun ProfileMemberScreen(
 }
 
 @Composable
-fun HeadShotCell(profileInfo: ProfileInfo, profileViewModel: ProfileViewModel) {
+fun HeadshotCell(profileInfo: ProfileInfo, profileViewModel: ProfileViewModel) {
 
     val context = LocalContext.current
     val file = remember { context.createImageFile() }
