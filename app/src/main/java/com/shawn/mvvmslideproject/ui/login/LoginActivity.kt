@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.ui.base.BaseActivity
 import com.shawn.mvvmslideproject.ui.theme.BASIC_Slide_ProjectTheme
-import com.shawn.mvvmslideproject.util.ShowToastLong
+import com.shawn.mvvmslideproject.extensions.showToastLong
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,7 +52,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
     LaunchedEffect(key1 = loginViewModel.toastSharedFlow) {
         loginViewModel.apply {
             toastSharedFlow.collect { message ->
-                ShowToastLong(context, message)
+                context.showToastLong( message)
                 loginViewModel.clearToastMessage()
             }
         }

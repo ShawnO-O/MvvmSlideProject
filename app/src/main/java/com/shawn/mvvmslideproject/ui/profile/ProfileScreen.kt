@@ -65,7 +65,7 @@ import com.shawn.mvvmslideproject.extensions.cellTextColor
 import com.shawn.mvvmslideproject.extensions.isCellEmpty
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.ui.login.LoginActivity
-import com.shawn.mvvmslideproject.util.ShowToastLong
+import com.shawn.mvvmslideproject.extensions.showToastLong
 import com.shawn.mvvmslideproject.util.bottomSheets.PhotoMediaSelectBottomSheet
 import com.shawn.mvvmslideproject.util.createImageFile
 import com.shawn.mvvmslideproject.util.useAlbum
@@ -94,7 +94,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     LaunchedEffect(key1 = profileViewModel.toastSharedFlow) {
         profileViewModel.apply {
             toastSharedFlow.collect { message ->
-                ShowToastLong(context, message)
+                context.showToastLong(message)
                 profileViewModel.clearToastMessage()
             }
         }
