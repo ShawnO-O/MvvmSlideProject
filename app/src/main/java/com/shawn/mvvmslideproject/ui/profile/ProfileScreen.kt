@@ -63,9 +63,9 @@ import com.shawn.mvvmslideproject.BuildConfig
 import com.shawn.mvvmslideproject.R
 import com.shawn.mvvmslideproject.extensions.cellTextColor
 import com.shawn.mvvmslideproject.extensions.isCellEmpty
+import com.shawn.mvvmslideproject.extensions.showToastLong
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
 import com.shawn.mvvmslideproject.ui.login.LoginActivity
-import com.shawn.mvvmslideproject.extensions.showToastLong
 import com.shawn.mvvmslideproject.util.bottomSheets.PhotoMediaSelectBottomSheet
 import com.shawn.mvvmslideproject.util.createImageFile
 import com.shawn.mvvmslideproject.util.useAlbum

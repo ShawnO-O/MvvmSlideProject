@@ -86,6 +86,9 @@ dependencies {
     //hilt 這要對應kotlin版本 所以一定要版本一致性
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.androidx.appcompat)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.datastore:datastore:1.1.1")
+
     kapt("com.google.dagger:hilt-android-compiler") { version { strictly("2.48") } }
     implementation("com.google.dagger:hilt-android") { version { strictly("2.48") } }
     kapt("com.google.dagger:hilt-compiler") { version { strictly("2.48") } }

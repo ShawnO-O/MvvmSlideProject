@@ -21,12 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shawn.mvvmslideproject.R
+import com.shawn.mvvmslideproject.extensions.showToastLong
 import com.shawn.mvvmslideproject.ui.base.BaseActivity
 import com.shawn.mvvmslideproject.ui.theme.BASIC_Slide_ProjectTheme
-import com.shawn.mvvmslideproject.extensions.showToastLong
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,7 +42,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 }
-
+@Preview
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
     val account by loginViewModel.account.collectAsState(initial = "")
@@ -52,7 +53,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
     LaunchedEffect(key1 = loginViewModel.toastSharedFlow) {
         loginViewModel.apply {
             toastSharedFlow.collect { message ->
-                context.showToastLong( message)
+                context.showToastLong(message)
                 loginViewModel.clearToastMessage()
             }
         }
@@ -73,9 +74,10 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             paddingValues
         )
     }
+    
 }
 
-//@Preview(showBackground = true)
+
 @Composable
 fun AccountAndPassword(
     account: String = "",

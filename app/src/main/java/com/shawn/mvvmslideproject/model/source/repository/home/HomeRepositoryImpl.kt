@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class HomeRepositoryImpl @Inject constructor(private var homeRomeDataSource: HomeRomeDataSource) :
-    HomeRepository {
+class HomeRepositoryImpl @Inject constructor(private var homeRomeDataSource: HomeRomeDataSource) :HomeRepository {
 
     override fun getAttractionsFirst(page: Int, lang: String): Flow<Resource<AttractionsResponse>> {
         return flow {

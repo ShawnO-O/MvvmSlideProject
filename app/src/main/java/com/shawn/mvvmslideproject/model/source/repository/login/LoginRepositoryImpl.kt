@@ -26,7 +26,7 @@ class LoginRepositoryImpl @Inject constructor(
         memberLocalDataSource.saveId(mId)
     }
 
-    override suspend fun login(account: String, password: String): Flow<LoginStatus> {
+    override  fun login(account: String, password: String): Flow<LoginStatus> {
         return flow {
             val status = localDataSource.validLogin(account, password)
             when (status) {
@@ -38,8 +38,7 @@ class LoginRepositoryImpl @Inject constructor(
                     if (member != null) {
                         //帳號存在那就要檢查密碼是否正確
                         withContext(Dispatchers.IO) {
-                            checkLoginResult =
-                                memberDao.checkLoginAccountAndPassword(account, password)
+                            checkLoginResult = memberDao.checkLoginAccountAndPassword(account, password)
                         }
                         if (checkLoginResult != null) {
                             member?.let {
@@ -64,10 +63,10 @@ class LoginRepositoryImpl @Inject constructor(
         memberLocalDataSource.clearMemberInfo()
     }
 
-    override suspend fun register(account: String, password: String): Flow<RegisterStatus> {
+    override  fun register(account: String, password: String): Flow<RegisterStatus> {
         return flow {
-            var result = 0L
-            var haveAccount = false
+            var result :Long
+            var haveAccount:Boolean
             withContext(Dispatchers.IO) {
                 haveAccount = isAlreadyHaveAccount(account)
             }
@@ -92,7 +91,7 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    fun isAlreadyHaveAccount(account: String) = memberDao.getMemberByAccount(account) != null
+    private fun isAlreadyHaveAccount(account: String) = memberDao.getMemberByAccount(account) != null
 
-    fun insertMember(memberInfo: MemberInfo) = memberDao.insertMember(memberInfo)
+    private fun insertMember(memberInfo: MemberInfo) = memberDao.insertMember(memberInfo)
 }

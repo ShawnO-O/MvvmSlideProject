@@ -8,6 +8,7 @@ import com.shawn.mvvmslideproject.model.room.member.MemberDao
 import com.shawn.mvvmslideproject.model.room.member.MemberInfo
 import com.shawn.mvvmslideproject.model.room.profile.ProfileDao
 import com.shawn.mvvmslideproject.model.room.profile.ProfileInfo
+import kotlin.concurrent.Volatile
 
 @Database(entities = [MemberInfo::class, ProfileInfo::class], version = 1)
 abstract class MemberDatabase : RoomDatabase() {
@@ -15,7 +16,7 @@ abstract class MemberDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
 
     companion object {
-        private var INSTANCE: MemberDatabase? = null
+        @Volatile private var INSTANCE: MemberDatabase? = null
 
         fun getInstance(context: Context): MemberDatabase? {
             if (INSTANCE == null) {

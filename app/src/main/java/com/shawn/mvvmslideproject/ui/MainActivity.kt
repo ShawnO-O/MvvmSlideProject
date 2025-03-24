@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -25,7 +26,8 @@ import com.shawn.mvvmslideproject.navigation.NavigationConfigurations
 import com.shawn.mvvmslideproject.ui.base.BaseActivity
 import com.shawn.mvvmslideproject.ui.theme.BASIC_Slide_ProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -38,6 +40,11 @@ class MainActivity : BaseActivity() {
                 MainScreen()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("shawnTest", "onSaveInstanceState")
     }
 }
 
