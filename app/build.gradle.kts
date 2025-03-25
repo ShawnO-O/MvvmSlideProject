@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)  version "1.9.0"
+    alias(libs.plugins.jetbrains.kotlin.android)  version "1.9.22"
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -44,7 +44,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {
